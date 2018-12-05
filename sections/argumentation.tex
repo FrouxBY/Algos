@@ -7,40 +7,72 @@ This chapter are notes from the Imperial Course Machine Arguing from Francesca T
 \paragraph{introduction} % (fold)
 \label{par:introduction}
 
-Argument Framework are a field in AI which provide way of evaluate any debate problem. It is useful to resolve conflict, to explain decision or to deal with incomplete information. 
+	Argument Framework are a field in AI which provide way of evaluate any debate problem. It is useful to resolve conflict, to explain decision or to deal with incomplete information. 
 % paragraph introduction (end)
 \section{AA}
 
-\begin{definition}
- 		an  \textbf{AA framework} is a set $\mathrm{Args}$ of arguments and a binary relation $\mathrm{attacks}$. $(\alpha, \beta)\in \mathrm{attacks}$ means $\alpha$ attacks $\beta$.
-\end{definition} 
+	\subsection{Simple AA}
 
-\subsection{Semantics in AA}
+		\begin{definition}
+		 		an  \textbf{AA framework} is a set $\mathrm{Args}$ of arguments and a binary relation $\mathrm{attacks}$. $(\alpha, \beta)\in \mathrm{attacks}$ means $\alpha$ attacks $\beta$.
+		\end{definition} 
 
-In order to define a "winning" set of argument, we need to provide semantics over the the framework. This is like recipes which determine good set of arguments. 
+		\paragraph{Semantics in AA} 
+			In order to define a "winning" set of argument, we need to provide semantics over the the framework. This is like recipes which determine good set of arguments. 
 
-\begin{definition}
+		\begin{definition}
+			\begin{itemize}
+				\item \textbf{conflict-free}
+				\item \textbf{admissible:} c-f and attacks each attacking argument.
+				\item \textbf{preferred:} maximally admissible.
+				\item \textbf{complete:} admissible + contains each argument it defends.
+				\item \textbf{stable:} c-f + attacks each argument not in it.
+				\item \textbf{grounded:} minimally complete.
+				\item \textbf{sceptically preferred:} Intersection of all prefered.
+				\item \textbf{ideal:} maximal admissible and containing all prefered.
+			\end{itemize}
+		\end{definition}
 
-\begin{itemize}
-	\item \textbf{conflict-free}
-	\item \textbf{admissible}
-	\item \textbf{preferred}
-	\item \textbf{complete}
-	\item \textbf{stable}
-	\item \textbf{grounded}
-	\item \textbf{sceptically preferred}
-	\item \textbf{ideal}
-\end{itemize}
-\end{definition}
+		\begin{definition}
+			\textbf{Semi-stable extension:} complete such as $A\cup A^+$ is maximal. $A^+$ is the set of attacked argument by $A$.
+		\end{definition}
 
-\subsection{Simple AA}
-\subsection{AA + Suppport}
-\subsection{Argument Mining}
-\subsection{AA with PrefProb}
+		\todo{add ref to ASPARTIX and CONARG}
+
+	\subsection{Algorithms for AA}
+
+		\paragraph{Computing the grounded labelling:}
+		Here is an algorithm to compute a grounded labelling\\
+		\begin{algorithm}[H]
+		\KwData{An AA Framework}
+		\KwResult{The grounded Labelling}
+		Label all unatacked argument with IN \;
+		\While{The IN and the OUT are not stable}
+		{
+			Label OUT the arguments attacks by IN \;
+			Label IN the arguments only attacked by OUT\;
+		}
+		Label the still unlabelled UNDEC\;
+		\caption{Computing the grounded labelling}
+		\end{algorithm}
+
+		\paragraph{Computing membership in preferred/grounded/ideal extensions;} In order to compute membership, we use Dispute Tree.
+
+		We compute a dispute tree for an argument, and apply the different semantics which are easier to compute on a tree than on a graph.
+		\todo{add algos of computing dispute tree + def of semantics}
+
+		\paragraph{Computing stable extension:} We use answer set programming with logical program. 
+		
+
+	\subsection{AA + Suppport}
+	\subsection{Argument Mining}
+	\subsection{AA with PrefProb}
+
 \section{ABA}
-\subsection{Simple ABA}
 
-\subsection{ABA more DDs}
-\subsection{p-acyclic ABA}
+	\subsection{Simple ABA}
+	\subsection{ABA more DDs}
+	\subsection{p-acyclic ABA}
+
 \section{ArgGame}
 % chapter argumentation_framework (end)
