@@ -1,6 +1,168 @@
 %!TEX root = ../master.tex
 
 \chapter{Reinforcement Learning} % (fold)
-\label{cha:reinforcement_learning}
+	\label{cha:reinforcement_learning}
 
+
+\section{Markov Reward and Decision Process} % (fold)
+	\label{sec:markov_reward_and_decision_process}
+
+	\subsection{State Value Function Closed-form} % (fold)
+		\label{sub:state_value_function}
+		
+	% subsection state_value_function (end)
+
+	\subsection{Iterative Policy Evaluation Algorithm} % (fold)
+		\label{sub:iterative_policy_evaluation_algorithm}
+
+	% subsection iterative_policy_evaluation_algorithm (end)
+% section markov_reward_and_decision_process (end)
+
+\section{Dynamic Programming in RL} % (fold)
+	\label{sec:dynamic_programming_in_rl}
+
+	\subsection{Policy Iteration Algorithm} % (fold)
+		\label{sub:policy_iteration_algorithm}
+		
+	% subsection value_iteration_algorithm (end)
+
+	\subsection{Value Iteration Algorithm} % (fold)
+		\label{sub:value_iteration_algorithm}
+	
+	% subsection policy_iteration_algorithm (end)
+
+	\subsection{Assynchronous Backup in RL} % (fold)
+		\label{sub:assynchronous_backup_in_rl}
+		
+		\paragraph{Prioritised Sweeping} % (fold)
+			\label{par:prioritised_sweeping}
+		
+		% paragraph prioritised_sweeping (end)
+
+		\paragraph{Real-time Dynamic Programming} % (fold)
+			\label{par:real_time_dynamic_programming}
+		
+		% paragraph real_time_dynamic_programming (end)
+
+	% subsection assynchronous_backup_in_rl (end)
+	
+	\subsection{Properties and drawbacks of Dynamic Programming} % (fold)
+		\label{sub:properties_and_drawbacks_of_dynamic_programming}
+	
+	% subsection properties_and_drawbacks_of_dynamic_programming (end)
+
+% section dynamic_programming_in_rl (end)
+
+\section{Model-Free Learning} % (fold)
+	\label{sec:model_free_learning}
+
+	\subsection{Monte-Carlo Algorithms} % (fold)
+		\label{sub:monte_carlo_algorithm}
+
+		\paragraph*{(First Visit) Monte-Carlo Policy Evaluation}
+
+		\paragraph*{Every Visit Monte-Carlo Policy Evaluation}
+
+		\todo{Add "you cannot backup death" explanations}
+
+		\paragraph*{Batch vs Online Monte-Carlo}
+
+		\paragraph*{Incremental Monte-Carlo Update}
+
+		\paragraph*{Runing Mean for Non-Stationnary World}
+	% subsection monte_carlo_algorithms (end)
+
+	\subsection{Monte-Carlo Control Algorithms} % (fold)
+		\label{sub:monte_carlo_control_algorithms}
+	
+		\paragraph*{Monte-Carlo Policy Improvement}
+
+			\subparagraph*{Greedy Policy Improvement over State Value Function}
+
+			\subparagraph*{Greed Policy Improvement over State-Action Value Function}
+
+		\paragraph*{Exploring Starts Problem}
+			\todo{Don't forget Starting to explore}
+
+		\paragraph*{On-Policy $\epsilon$-greedy first-visit Monte-Carlo control Algorithm}
+
+		\paragraph*{Monte-Carlo Batch Learning to Control}
+
+		\paragraph*{Monte-Carlo Iterative Learning to Control}
+	% subsection monte_carlo_control_algorithms (end)
+
+	\subsection{Temporal Difference Learning} % (fold)
+		\label{sub:temporal_difference_learning}
+		
+		\paragraph*{Temporal Difference Value Function Estimation Algorithm}
+	% subsection temporal_difference_learning (end)
+	\todo{Add Comparison between MC and TD learning}
+
+	\subsection{Temporal Difference Learning Control Algorithm} % (fold)
+		\label{sub:temporal_difference_learning_control_algorithm}
+		
+		\paragraph*{SARSA - On Policy learning Temporal Difference Control}
+
+			\subparagraph*{SARSA-Lambda}
+			\subparagraph*{Hindsight Experience Replay}
+
+		\paragraph*{Q-Learning: Off-Policy Temporal Difference Learning}
+
+	% subsection temporal_difference_learning_control_algorithm (end)
+
+% section model_free_learning (end)
+
+\section{Reinforcement Learning with Function Approximation} % (fold)
+	\label{sec:reinforcement_learning_with_function_approximation}
+
+	\subsection{Exemple of features} % (fold)
+		\label{sub:exemple_of_features}
+
+		\paragraph*{Coarse Coding}
+		\paragraph*{Tile Coding}
+		\paragraph*{Radial-Basis Function}
+		\paragraph*{Deep Learning}
+	% subsection exemple_of_features (end)
+
+	\subsection{Monte-Carlo with Value Function Approximation} % (fold)
+		\label{sub:monte_carlo_with_value_function_approximation}
+	
+	% subsection monte_carlo_with_value_function_approximation (end)
+	
+	\subsection{Temporal Difference Learning with Value Function Approximation} % (fold)
+	\label{sub:temporal_difference_learning_with_value_function_approximation}
+
+	% subsection temporal_difference_learning_with_value_function_approximation (end)
+	
+	\subsection{Q-Learning with FA} % (fold)
+	\label{sub:q_learning_with_fa}
+	
+	% subsection q_learning_with_fa (end)
+	
+	\subsection{subsection name} % (fold)
+	\label{sub:subsection_name}
+	
+	% subsection subsection_name (end)
+% section reinforcement_learning_with_function_approximation (end)
+
+\section{Deep Learning Reinforcement Learning} % (fold)
+	\label{sec:deep_learning_reinforcement_learning}
+
+	\subsection{Experience Replay} % (fold)
+		\label{sub:experience_replay}
+	
+	% subsection experience_replay (end)
+	\subsection{Target Network} % (fold)
+		\label{sub:target_network}
+	
+	% subsection target_network (end)
+	\subsection{Clipping of Rewards} % (fold)
+		\label{sub:clipping_of_rewards}
+	
+	% subsection clipping_of_rewards (end)
+	\subsection{Skipping of Frames} % (fold)
+	\label{sub:skipping_of_frames}
+	
+	% subsection skipping_of_frames (end)
+% section deep_learning_reinforcement_learning (end)
 % chapter reinforcement_learning (end)
