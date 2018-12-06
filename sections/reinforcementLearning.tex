@@ -10,6 +10,13 @@
 	\subsection{State Value Function Closed-form} % (fold)
 		\label{sub:state_value_function}
 		
+		For a Markov Reward Process ($\mathcal{S}, \mathcal{P}, \mathcal{R}, \gamma$), defining the Return $\mathsf R_t$ and the State Value Function
+		$\mathsf v (s) = \mathbb{E}[\mathsf R_t  S_t = s]$\\
+		Then we have, in a vector form : 
+		\[
+			\mathbf{v} = (\mathbb{1} - \gamma \mathcal P )^{-1} \mathcal{R}
+		\]
+		Unfortunately, Matrix inversion in costly, so this is only feasible in small Markov Reward Process
 	% subsection state_value_function (end)
 
 	\subsection{Iterative Policy Evaluation Algorithm} % (fold)
