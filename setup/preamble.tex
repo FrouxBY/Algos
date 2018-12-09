@@ -64,8 +64,8 @@
 \titleformat*{\section}{\normalfont\Large\bfseries}
 \titleformat*{\subsection}{\normalfont\large\bfseries}
 \titleformat*{\subsubsection}{\normalfont\normalsize\bfseries}
-\titleformat*{\paragraph}{\normalfont\normalsize\bfseries}
-\titleformat*{\subparagraph}{\normalfont\normalsize\bfseries}
+% \titleformat*{\paragraph}{\normalfont\normalsize\bfseries}
+% \titleformat*{\subparagraph}{\normalfont\normalsize\bfseries}
 
 % Clear empty pages between chapters
 \let\origdoublepage\cleardoublepage
@@ -98,6 +98,7 @@
   bibencoding=utf8
   ]{biblatex}
 \addbibresource{bib/mybib}
+\usepackage{csquotes}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Misc
@@ -146,6 +147,7 @@
 
 %% Adition by Froux 
 \usepackage{listings} % Required for insertion of code
+\usepackage[boxed]{algorithm2e}
 \usepackage{courier} % Required for the courier font
 \usepackage{lipsum} % Used for inserting dummy 'Lorem ipsum' text into the template
 \usepackage{tikz} % Used for drawing figures and graphs
