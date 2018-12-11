@@ -110,7 +110,14 @@ This chapter are notes from the Imperial Course Machine Arguing from Francesca T
 
 
 	\subsection{Argument Mining}
-	\subsection{AA with Preference Probabilist}
+	\subsection{AA with Preference}
+		When taking into account preference in a AA, (in the form $X < Y = X$ is less prefered to $Y$) we can still use the classic AA semantics but we can improved it by using the preferences informations :
+		\begin{itemize}
+			\item By \textbf{deleting attacks} (an $(x, y)$ attacks succeed iff $x \nless y$) 
+			\item By \textbf{reversing attacks} (if $(x, y)$ and $x < y$ then we reverse by replacing this attack by $(y, x)$).
+			\item By \textbf{Selecting Amongst extension}, using the preference to select extension with the same extension (ex : differentiate 2 stable extensions). Look at \textbf{Rich PAF} for some formal definition.
+		\end{itemize}
+	\subsection{AA with Probabilities}
 
 \section{Assumption-Based Argumentation}
 	
