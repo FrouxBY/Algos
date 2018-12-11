@@ -41,8 +41,13 @@ This chapter are notes from the Imperial Course Machine Arguing from Francesca T
 
 	\subsection{Algorithms for AA}
 
+		\paragraph*{Computing Grounded extensions}
+		Use the same algorithms as grounded labelling, but only output the IN arguments as the grounded extensions.\\
+		the grounded extensions in unique. 
+
 		\paragraph{Computing the grounded labelling:}
 		Here is an algorithm to compute a grounded labelling\\
+
 		\begin{algorithm}[H]
 		\KwData{An AA Framework}
 		\KwResult{The grounded Labelling}
@@ -67,7 +72,20 @@ This chapter are notes from the Imperial Course Machine Arguing from Francesca T
 	\subsection{AA with Suppport}
 
 		\subsubsection[BAA]{Bipolar Abstract Argumentation}
-			We add a \textbf{Support} relation to a classic AA Framework. There are different semantics, but we focus here one the QuAD (\textbf{Quantitative Argument Debate}) which add a numerical strenght to any argument, and give rule for updating strenght regarding the supporters or attackers.
+			We add a \textbf{Support} relation to a classic AA Framework (BAA = $\langle Args, Attacks, Supports \rangle$). \\There are different semantics :
+
+			\paragraph*{Semantics in BAA with deductive support}
+			We can deduce an AA Framework from a BAA with $Attacks' = Attacks \cup Attacks_{sup} \cup Attacks_{s-med}$ with 
+			\begin{definition}
+				\begin{itemize}
+					\item $Attacks_{sup}$ is \textbf{the supported attacks}  $\implies \alpha$ attacks every argument that its supports attacks (supports of supports are supports)
+					\item $Attacks_{s-med}$ is the super mediated attacks  $ \implies \alpha$ attacks every argument whose supports an argument attacked or $attacked_{sup}$  by $\alpha$ 
+				\end{itemize}
+			\end{definition}
+
+			Then, we apply the AA semantics to $\langle Args, Attacks' \rangle$. Those semantics are the d-X semantics, where X replace every semantic from AA (grounded, complete, etc.)
+			\paragraph*{QuAD}
+			We focus here one the QuAD (\textbf{Quantitative Argument Debate}) which add a numerical strenght to any argument, and give rule for updating strenght regarding the supporters or attackers.
 
 			\todo{Add DF-QuAD rules and algorithm}
 	\subsection{Argument Mining}
