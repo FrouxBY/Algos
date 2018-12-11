@@ -84,10 +84,31 @@ This chapter are notes from the Imperial Course Machine Arguing from Francesca T
 			\end{definition}
 
 			Then, we apply the AA semantics to $\langle Args, Attacks' \rangle$. Those semantics are the d-X semantics, where X replace every semantic from AA (grounded, complete, etc.)
-			\paragraph*{QuAD}
+			\paragraph*{QuAD Framework}
 			We focus here one the QuAD (\textbf{Quantitative Argument Debate}) which add a numerical strenght to any argument, and give rule for updating strenght regarding the supporters or attackers.
+			
 
-			\todo{Add DF-QuAD rules and algorithm}
+			\begin{definition}
+				\begin{itemize}
+					\item We define the QuAD Framework as $\langle \mathcal{A}, \mathcal{C}, \mathcal{P}, \mathcal{R}, \mathcal{BS}\rangle $ Where $\mathcal{A}$ is the set of answer arguments, $\mathcal{C}$ is the set of con args, $\mathcal{P}$ are the pro args, which are disjoint, $\mathcal{R}$ the relation (with $\mathcal{R}^+$ the supporters and $\mathcal{R}^-$ the attackers) and $\mathcal{BS}$ the Base Score, which give score to each args. 
+					\item The \textbf{Base funcion} is $f(v_1, v_2) = v_1 + (1-v_1)v_2$
+					\item the \textbf{aggregation function} as a recursive definition : 
+					\begin{align*}
+						& n=0 \implies \mathcal{F}(S)=0\\
+						& n=1 \implies \mathcal{F}(S)= v_1\\
+						& n=2 \implies \mathcal{F}(S)= f(v_1, v_2)\\
+						& n>2 \implies \mathcal{F}(S)= f(\mathcal{F}(S\backslash \{v_n\}, v_n))
+					\end{align*}
+					\item the \textbf{Combination function} is defined by: \\
+					$c(v_0, v_a, v_s) = v_0 - v_0 \cdot |v_s-v_a|$ if $v_a \geq v_s$\\
+					$c(v_0, v_a, v_s) = v_0 + (1 - v_0 ) \cdot |v_s-v_a|$ if $v_a \geq v_s$
+					\item the \textbf{Strength Function} is defined as : $\mathcal{S}(\alpha) = c(\mathcal{BS}(\alpha), \mathcal{F}(SEQ_S(\mathcal{R}^-(\alpha))), \mathcal{F}(SEQ_S(\mathcal{R}^+(\alpha))))$
+				\end{itemize}
+			\end{definition}
+
+			The DF-QuAD (for \textbf{Discontinuity free}-QuAD) algorithm is simply to apply these semantics to a BAA framework, in setting initial weights to any arguments. 
+
+
 	\subsection{Argument Mining}
 	\subsection{AA with Preference Probabilist}
 
