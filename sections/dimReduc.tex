@@ -1,5 +1,63 @@
 %!TEX root = ../master.tex
-\chapter{Dimensionality Reduction} % (fold)
+\chapter{Dimensionality Reduction and Feature Extraction} % (fold)
 \label{cha:dimensionality_reduction}
 
+\section{Principal Component Analysis} % (fold)
+	\label{sec:principal_component_analysis}
+	
+	The objective of PCA is to find a set of features, via linear projections, that maximise the variance of the sample data. We need to decide how many dimension $d$ we want to keep. 
+ 
+	\subsection{Simple algorithm} % (fold)
+		\label{sub:simple_algorithm}
+	
+		\begin{algorithm}[H]
+				\KwData{Vectors $x_i$ of \textbf{centered} data, number F features and $n$ sample. Dimension $d$ of reduction.}
+				\KwResult{Y of size $d \times n$}
+				Compute the product matrix of centered data : $\mat X \mat X \T$\;
+				Compute the Eigen Analysis $X X\T = V \Lambda V \T$ \;
+				Order the Eigen Value by descending value, and permute Column of V correspondly\; 
+				Compute the eigenvectors : $U = X V \Lambda^{-1/2}$\;
+				Keep specific number of first components : $U_d$ the d first $d$ column of $U$ \;
+				Compute the new features vectors : $Y = U_d\T X$ 
+				\caption{Simple PCA Algorithm}
+			\end{algorithm}
+	% subsection simple_algorithm (end)
+
+	\subsection{Whitening PCA} % (fold)
+		\label{sub:whitening_pca}
+
+		The feature given by the PCA algorithm are un-correlated, but the variance in each dimension are not the same (in fact this are the eigen value of $X X\T$). We can whitening the features (or "sphering" them) by making the covariance matrix equal to Identity.
+
+		\begin{algorithm}[H]
+				\KwData{Vectors $x_i$ of \textbf{centered} data, number F features and $n$ sample. Dimension $d$ of reduction.}
+				\KwResult{Y of size $d \times n$ with Identity Covariance Matrix}
+				Compute the PCA of $X$ and keep U and $\Lambda$\;
+				Compute the Eigen Analysis $X X\T = V \Lambda V \T$ \;
+				Compute the whitened features vectors : $Y = U_d \Lambda ^{-1/2} X = (X V \Lambda ^{-1})_d X $
+				\caption{Whitened PCA Algorithm}
+			\end{algorithm}
+
+	
+	% subsection whitening_pca (end)
+
+	\subsection{Kernel PCA} % (fold)
+		\label{sub:kernel_pca}
+	
+		Sometimes we want to compute non-linear features extractions. We use the kernel method to compute this. For a dataset $X = (x_i)_{1...n}$ we know only the kernel
+		 matrix $K = {[\phi(x_i) {\phi(x_j)} \T]}_{(1...n)^2} = X^{\phi} {X^{\phi}} \T $ with $\phi$ the non-linear mapping.
+
+		\begin{algorithm}[H]
+				\KwData{Vectors $x_i$ of \textbf{centered} data, number F features and $n$ sample. Dimension $d$ of reduction. K the kernel matrix}
+				\KwResult{Y of size $d \times n$}
+				Compute the Eigen Analysis $K = \mat X^{\phi} {\mat X^{\phi}} \T = V \Lambda {V }\T$ \;
+				Order the Eigen Value by descending value, and permute Column of V correspondly\;
+				Keep specific number of first components : $V_d$ the d first $d$ column of $V$ \;
+				Compute the vector $g(x_t) = [k(x_i, x_t)]_{1..n}]$ \;
+				Compute the $E = \frac{1}{n}\vec 1 \vec 1 \T $ matrix \;
+				Compute the new features vectors : $y_t = \Lambda^{-1/2} V \T (I - E)\left( g(x_t)-\frac{1}{n} K \vec 1 \right)$ 
+				\caption{Kernel PCA Algorithm}
+			\end{algorithm}
+	% subsection kernel_pca (end)
+% section principal_component_analysis (end)
+	
 % chapter dimensionality_reduction (end)
