@@ -44,7 +44,7 @@
 					{
 						$v \leftarrow V(s)$ \;
 						$V(s) \leftarrow \sum_\alpha \pi(s, \alpha) \sum_{s'} \mathcal{P}^a_{ss'}[\mathcal{R}^a_{ss'} + \gamma V(s')]$ \;
-						$\Delta \leftarrow \max(\Delta, \abs{v - V(s)}) $ 
+						$\Delta \leftarrow \max(\Delta, \abs{v - V(s)}) $ \;
 					}
 				}
 				Return V
@@ -93,7 +93,26 @@
 
 	\subsection{Value Iteration Algorithm} % (fold)
 		\label{sub:value_iteration_algorithm}
-	
+		
+		It can be shown that we don't need to wait for the convergence of the Value Function before iterating the policy in the previous algorithm. We can shorten some steps, and even get rid of explicity updating a policy (we are always using the greedy policy wrt. $V(s)$). This lead to the following algorithm : 
+
+		\begin{algorithm}[H]
+				\KwData{a MDP ($\mathcal{S}$, $\mathcal{P}$, $\mathcal{A}$, $\mathcal{R}$, $\gamma$)}
+				\KwResult{The optimal policy $\pi*$ and his corresponding value function $V^{\pi*}$}
+				Initialise V(s)=0 $\forall s$ \;
+				\While{Convergence condition (Value function is stable, or number of epoch)}
+				{
+					$\Delta = 0$ \;
+					\ForAll{$s \in S$}
+					{
+						$v \leftarrow V(s)$ \;
+						$V(s) \leftarrow \max_a \sum_{s'} \mathcal{P}^a_{ss'}[\mathcal{R}^a_{ss'} + \gamma V(s')]$ \;
+						$\Delta \leftarrow \max(\Delta, \abs{v - V(s)}) $ \;
+					}
+				}
+				Return $\forall s, \pi*(s) = \arg \max_a  \sum_{s'} \mathcal{P}^a_{ss'}[\mathcal{R}^a_{ss'} + \gamma V(s')]$ \;
+				\caption{Iterative Policy Evaluation Algorithm}
+			\end{algorithm}
 	% subsection policy_iteration_algorithm (end)
 
 	\subsection{Assynchronous Backup in RL} % (fold)
