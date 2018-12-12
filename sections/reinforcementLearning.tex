@@ -10,7 +10,15 @@
 	\subsection{State Value Function Closed-form} % (fold)
 		\label{sub:state_value_function}
 		
-		For a Markov Reward Process ($\mathcal{S}, \mathcal{P}, \mathcal{R}, \gamma$), defining the Return $\mathsf R_t$ and the State Value Function
+		For a Markov Reward Process ($\mathcal{S}, \mathcal{P}, \mathcal{R}, \gamma$), with 
+		\begin{itemize}
+			\item $\mathcal{S}$ the States
+			\item $\mathcal{P}$ The transition matrix
+			\item $\mathcal{R}$ the reward matrix
+			\item $ \gamma $the discount
+		\end{itemize}
+
+		We define then the Return $\mathsf R_t$ and the State Value Function
 		$\mathsf v (s) = \mathbb{E}[\mathsf R_t  S_t = s]$\\
 		Then we have, in a vector form : 
 		\[
@@ -22,15 +30,57 @@
 	\subsection{Iterative Policy Evaluation Algorithm} % (fold)
 		\label{sub:iterative_policy_evaluation_algorithm}
 
+		In RL, we need not only the value of different state, but also a policy to define which action to take in any state. Then, we had an action space $\mathcal{A}$ and a policy $\pi$ to a MRP to obtaine what is called a Markov Decision Process	(MDP).
+
+		The first algorithm is a method to evaluate a policy. We don't need to store all the previous value of V while updating, and furthermore, it converges faster this way.
+
+		\begin{algorithm}[H]
+				\KwData{a MDP ($\mathcal{S}$, $\mathcal{P}$, $\mathcal{A}$, $\mathcal{R}$, $\gamma$) and $\pi$ the policy to be evaluate }
+				\KwResult{The value function $V^{\pi}$}
+				Initialise V(s) =0 $\forall s$ \;
+				\While{Convergence condition (number of epoch, $\Delta \leq$ threshold, ...)}
+				{
+					\ForAll{$s \in S$}
+					{
+						$v \leftarrow V(s)$ \;
+						$V(s) \leftarrow \sum_\alpha \pi(s, \alpha) \sum_{s'} \mathcal{P}^a_{ss'}[\mathcal{R}^a_{ss'} + \gamma V(s')]$ \;
+						$\Delta \leftarrow \max(\Delta, \abs{v - V(s)}) $ 
+					}
+				}
+				Return V
+				\caption{Iterative Policy Evaluation Algorithm}
+			\end{algorithm}
+
 	% subsection iterative_policy_evaluation_algorithm (end)
 % section markov_reward_and_decision_process (end)
 
 \section{Dynamic Programming in RL} % (fold)
 	\label{sec:dynamic_programming_in_rl}
 
+	In order to compute an optimal policy, we can do better than trying every policy and evaluating their $V^{\pi}$, the first class of algorithm enter in the Dynamic programming family. Convergence are assured by theorem relative to the Belmann equation (Policy Improvement theorem, Belmann principle of optimality, ...).
 	\subsection{Policy Iteration Algorithm} % (fold)
 		\label{sub:policy_iteration_algorithm}
 		
+		First algorithm simply apply a greedy \textbf{deterministic} policy relative to the Value function, and recalculate the new Value function, until the policy is stable (and according to theorem, optimal).
+
+		\begin{algorithm}[H]
+				\KwData{a MDP ($\mathcal{S}$, $\mathcal{P}$, $\mathcal{A}$, $\mathcal{R}$, $\gamma$)}
+				\KwResult{The optimal policy $\pi*$ and his corresponding value function $V^{\pi*}$}
+				Initialise V(s)=0 and $\pi(s) \in \mathcal{A},  \forall s$ \;
+				\While{Convergence condition (policy is stable, or number of epoch)}
+				{
+					Do a Policy Evaluation for $\pi$ (with the Iterative Policy Evaluation for exemple)
+					\ForAll{$s \in S$}
+					{
+						$b \leftarrow \pi(s)$ \;
+						$\pi(s) \leftarrow \arg \max_a \sum_{s'} \mathcal{P}^a_{ss'}[\mathcal{R}^a_{ss'} + \gamma V(s')]$ \;
+						$\text{policy-not-stable} \leftarrow (b \neq \pi(s) )\vee \text{policy-not-stable} $ 
+					}
+				}
+				Return V
+				\caption{Iterative Policy Evaluation Algorithm}
+			\end{algorithm}
+
 	% subsection value_iteration_algorithm (end)
 
 	\subsection{Value Iteration Algorithm} % (fold)
