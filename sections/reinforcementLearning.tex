@@ -63,6 +63,7 @@
 		
 		First algorithm simply apply a greedy \textbf{deterministic} policy relative to the Value function, and recalculate the new Value function, until the policy is stable (and according to theorem, optimal).
 
+
 		\begin{algorithm}[H]
 				\KwData{a MDP ($\mathcal{S}$, $\mathcal{P}$, $\mathcal{A}$, $\mathcal{R}$, $\gamma$)}
 				\KwResult{The optimal policy $\pi*$ and his corresponding value function $V^{\pi*}$}
@@ -81,6 +82,13 @@
 				\caption{Iterative Policy Evaluation Algorithm}
 			\end{algorithm}
 
+		This can be seen as the following scheme : 
+
+		\begin{figure}[ht]
+			\centering
+			\includegraphics[scale=0.5]{figures/GenPolicyIteration}
+			\caption{Generialised Policy Iteration Algorithm}
+		\end{figure}
 	% subsection value_iteration_algorithm (end)
 
 	\subsection{Value Iteration Algorithm} % (fold)
