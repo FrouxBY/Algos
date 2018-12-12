@@ -49,22 +49,37 @@ This chapter are notes from the Imperial Course Machine Arguing from Francesca T
 		Here is an algorithm to compute a grounded labelling\\
 
 		\begin{algorithm}[H]
-		\KwData{An AA Framework}
-		\KwResult{The grounded Labelling}
-		Label all unatacked argument with IN \;
-		\While{The IN and the OUT are not stable}
-		{
-			Label OUT the arguments attacks by IN \;
-			Label IN the arguments only attacked by OUT\;
-		}
-		Label the still unlabelled UNDEC\;
-		\caption{Computing the grounded labelling}
+			\KwData{An AA Framework}
+			\KwResult{The grounded Labelling}
+			Label all unatacked argument with IN \;
+			\While{The IN and the OUT are not stable}
+			{
+				Label OUT the arguments attacks by IN \;
+				Label IN the arguments only attacked by OUT\;
+			}
+			Label the still unlabelled UNDEC\;
+			\caption{Computing the grounded labelling}
 		\end{algorithm}
 
 		\paragraph{Computing membership in preferred/grounded/ideal extensions;} In order to compute membership, we use Dispute Tree.
 
 		We compute a dispute tree for an argument, and apply the different semantics which are easier to compute on a tree than on a graph.
+
+
 		\todo{add algos of computing dispute tree + def of semantics}
+
+		\begin{algorithm}[H]
+			\KwData{An AA Framework, and a arg $\alpha$}
+			\KwResult{Finite or infinite dispute tree corresponding to $\alpha$}
+			add a root node Label $\alpha$ as proponent \;
+			\While{The tree is not stable}
+			{
+				for every $\beta \in$ proponent, and for every $(\gamma, \beta)$ add a child-node $\gamma$ as opponent\;
+				for every $\beta \in$ opponent, and for every $(\gamma, \beta)$ add a node $\gamma$ as proponent in the limit of one child-node per opponent \;
+			}
+			\caption{Computing dispute Tree}
+		\end{algorithm}
+
 
 		\paragraph{Computing stable extension:} We use answer set programming with logical program. 
 		
