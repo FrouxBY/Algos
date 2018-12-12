@@ -29,7 +29,7 @@ This chapter are notes from the Imperial Course Machine Arguing from Francesca T
 				\item \textbf{stable:} c-f + attacks each argument not in it.
 				\item \textbf{grounded:} minimally complete.
 				\item \textbf{sceptically preferred:} Intersection of all prefered.
-				\item \textbf{ideal:} maximal admissible and containing all prefered.
+				\item \textbf{ideal:} maximal admissible and contain in all prefered (i.e. in the sceptically preferred).
 			\end{itemize}
 		\end{definition}
 
@@ -101,7 +101,7 @@ This chapter are notes from the Imperial Course Machine Arguing from Francesca T
 					\end{align*}
 					\item the \textbf{Combination function} is defined by: \\
 					$c(v_0, v_a, v_s) = v_0 - v_0 \cdot |v_s-v_a|$ if $v_a \geq v_s$\\
-					$c(v_0, v_a, v_s) = v_0 + (1 - v_0 ) \cdot |v_s-v_a|$ if $v_a \geq v_s$
+					$c(v_0, v_a, v_s) = v_0 + (1 - v_0 ) \cdot |v_s-v_a|$ if $v_a < v_s$
 					\item the \textbf{Strength Function} is defined as : $\mathcal{S}(\alpha) = c(\mathcal{BS}(\alpha), \mathcal{F}(SEQ_S(\mathcal{R}^-(\alpha))), \mathcal{F}(SEQ_S(\mathcal{R}^+(\alpha))))$
 				\end{itemize}
 			\end{definition}
