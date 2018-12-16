@@ -117,14 +117,75 @@
 
 	\subsection{Assynchronous Backup in RL} % (fold)
 		\label{sub:assynchronous_backup_in_rl}
+
+		\begin{definition}
+			\begin{itemize}
+				\item The \textbf{Backup} in RL is the fact to update the value of a state using values of futures state states. This can be understood as you check what's going on in the future, and backup this information to present time to update your knowledge.
+				\item A \textbf{synchronous backup} is a backup made simultaneously for all states (can be done in parallel). 
+				\item An \textbf{assynchronous backup} apply a backup to only one selected state. Those methods can be much more efficient in reducing computation (only deal we required backup) and are still guaranteed to converge.
+			\end{itemize}
+		\end{definition}
+
+			For exemple the policy iteration algorithm can be compute both way, but the assynchronous way converge faster. 
+
 		
 		\paragraph{Prioritised Sweeping} % (fold)
 			\label{par:prioritised_sweeping}
-		
+			
+			\begin{definition}
+				A \textbf{sweep} consists of applying a backup operation to each state. A synchronous backup compute a sweep at every iteration whereas a assynchronous backup may never compute a complete sweep (depending on the strategy).
+
+				A \textbf{prioritised swweping} use a criteria and a priority queue in order to decide which value will be backup next.
+			\end{definition}
+
+		An implementation of a prioritised sweeping can be made using the \textbf{Bellman Error}
+		\[
+			\norm{v(s) - \max_a \left( \mathcal{R}_s^a + \gamma \sum_{s'} P[s' | s, a] v(s') \right)}
+		\]
+		as priority criteria. It requires the knowledge of the \textbf{reverse dynamics} $ P[s' | s, a] $. 
+
+		\begin{algorithm}[H]
+				\KwData{a MDP ($\mathcal{S}$, $\mathcal{P}$, $\mathcal{A}$, $\mathcal{R}$, $\gamma$)}
+				\KwResult{The optimal policy $\pi*$ and his corresponding value function $V^{\pi*}$}
+				Initialise V(s)=0 and the Bellman Error $B(s), \forall s$ \;
+				Initialise the priority queue in ordering the $s$ with $B(s)$\;
+				\While{Convergence condition (Value function is stable, or number of epoch)}
+				{
+					select $s$ the head of the queue
+					{
+						$v \leftarrow V(s)$ \;
+						$V(s) \leftarrow \max_a \sum_{s'} \mathcal{P}^a_{ss'}[\mathcal{R}^a_{ss'} + \gamma V(s')]$ \;
+						Update $B(s)$ and the priority queue \;
+					}
+				}
+				Return $\forall s, \pi*(s) = \arg \max_a  \sum_{s'} \mathcal{P}^a_{ss'}[\mathcal{R}^a_{ss'} + \gamma V(s')]$ \;
+				\caption{Prioritised sweeping with Bellman error}
+			\end{algorithm}
+
 		% paragraph prioritised_sweeping (end)
 
 		\paragraph{Real-time Dynamic Programming} % (fold)
 			\label{par:real_time_dynamic_programming}
+
+			The idea here is to use the \textbf{agent} experience to guide the selection of states. Each iteration, you backup the state was just visited.
+
+			\begin{algorithm}[H]
+				\KwData{a MDP ($\mathcal{S}$, $\mathcal{P}$, $\mathcal{A}$, $\mathcal{R}$, $\gamma$)}
+				\KwResult{The optimal policy $\pi*$ and his corresponding value function $V^{\pi*}$}
+				Initialise V(s)=0 $ \forall s$ \;
+				choose a starting state $s = s_0$\;
+				\While{Convergence condition (Value function is stable, or number of epoch)}
+				{
+					{
+						$v \leftarrow V(s)$ \;
+						$V(s) \leftarrow \max_a ( \mathcal{R}^a_{s} +  \gamma \sum_{s'} P[s' | s, a] V(s'))$ \;
+						choose the next step from $s$ (greedy policy)\;
+					}
+				}
+				Return $\forall s, \pi*(s) = \arg \max_a  \sum_{s'} \mathcal{P}^a_{ss'}[\mathcal{R}^a_{ss'} + \gamma V(s')]$ \;
+				\caption{Prioritised sweeping with Bellman error}
+			\end{algorithm}
+
 		
 		% paragraph real_time_dynamic_programming (end)
 
@@ -139,6 +200,9 @@
 
 \section{Model-Free Learning} % (fold)
 	\label{sec:model_free_learning}
+
+	The dynamic programing requires lot of information to be compute, especially what is called the \textbf{model}, the states, the actions, the rewards and the transitions. We might want to learn form model which are difficult to observe, and with partial information, etc. That's what we need \textbf{model-free learning} algorithms, which can deal with model without knowing in advance the transition and the rewards. 
+
 
 	\subsection{Monte-Carlo Algorithms} % (fold)
 		\label{sub:monte_carlo_algorithm}
