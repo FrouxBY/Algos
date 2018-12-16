@@ -193,6 +193,12 @@
 	
 	\subsection{Properties and drawbacks of Dynamic Programming} % (fold)
 		\label{sub:properties_and_drawbacks_of_dynamic_programming}
+
+		\begin{itemize}
+			\item Dynamic Programming uses \emph{full-width} backup $\implies$ faster convergence but requires lot of ressource
+			\item Require \emph{complete} knowledge of the MDP $\implies$ this is not really Machine Learning, but more optisation (all parameters are actually known).
+			\item DP is effective for \emph{medium size problems} (millions of state, backup not to expensive)
+		\end{itemize}
 	
 	% subsection properties_and_drawbacks_of_dynamic_programming (end)
 
@@ -207,11 +213,54 @@
 	\subsection{Monte-Carlo Algorithms} % (fold)
 		\label{sub:monte_carlo_algorithm}
 
+		Monte-Algorithms are the class of algorithms which learn from episodes of experiences. Which mean basicaly, you play the story fully with what you know, then analyse what append, learn some knowledge from this, and try again. This is different from DP because here you are learning from "real life" experience.
+
 		\paragraph*{(First Visit) Monte-Carlo Policy Evaluation}
+
+			The first visit MC only take into account the returns from the first visit (i.e. if a state is visited more than once in a trace, it does not count) \\
+			\begin{algorithm}[H]
+				\KwData{a uncomplete MDP ($\mathcal{S}$, $\mathcal{R}$, traces $T$ wich contain series of state and reward, $\pi$ a policy, and still $\gamma$)}
+				\KwResult{The State Value of the MDP for $\pi$}
+				Initialise $\hat V(s), \forall s$\;
+				Initialise $Returns(s), \forall s$ with empty list
+				\While{Convergence condition (Value function is stable, or number of epoch)}
+				{
+					Get a trace $\tau$ from $T$ \;
+					\ForAll{s in $\tau$}{
+					R $\leftarrow$ return from the \emph{first appearance} of s in $\tau$ \;
+					Append R to Returns(s) \;
+					$\hat V(s) \leftarrow average(Returns(s))$\;
+					} 
+				}
+				Return $\hat V$ \;
+				\caption{First Visit Monte-Carlo Policy Evaluation}
+			\end{algorithm}
 
 		\paragraph*{Every Visit Monte-Carlo Policy Evaluation}
 
-		\todo{Add "you cannot backup death" explanations}
+			You can have the same algorithm, with taking into account all the visit from a trace. \\
+
+			\begin{algorithm}[H]
+				\KwData{a uncomplete MDP ($\mathcal{S}$, $\mathcal{R}$, traces $T$ wich contain series of state and reward, $\pi$ a policy, and still $\gamma$)}
+				\KwResult{The State Value of the MDP for $\pi$}
+				Initialise $\hat V(s), \forall s$\;
+				Initialise $Returns(s), \forall s$ with empty list
+				\While{Convergence condition (Value function is stable, or number of epoch)}
+				{
+					Get a trace $\tau$ from $T$ \;
+					\ForAll{s in $\tau$}{
+					R $\leftarrow$ returns from \emph{all appearances} of s in $\tau$ \;
+					Append R to Returns(s) \;
+					$\hat V(s) \leftarrow average(Returns(s))$\;
+					} 
+				}
+				Return $\hat V$ \;
+				\caption{Every Visit Monte-Carlo Policy Evaluation}
+			\end{algorithm}
+
+
+		\paragraph*{You cannot backup death :} 
+			if the trace lead to a death state (with no reward during the trace, or infinite negative reward), then the MC will not be able to backup any sensitive data. 
 
 		\paragraph*{Batch vs Online Monte-Carlo}
 
