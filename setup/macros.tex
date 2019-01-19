@@ -207,3 +207,33 @@
 }{%
         \end{exa}
 }
+
+
+%%% Git reference %%%
+
+
+\newcommand\dotGitHEAD{}
+\newcommand\branch{}
+\newcommand\commit{}
+
+
+\makeatletter\let\myfilehandle\@inputcheck\makeatother
+
+\openin\myfilehandle=.git/HEAD\relax
+
+\begingroup\endlinechar-1
+  \global\read\myfilehandle to \dotGitHEAD
+\endgroup
+\closein\myfilehandle
+
+\newcommand\GetBranch{}
+\def\GetBranch ref: refs/heads/#1\relax{\renewcommand{\branch}{#1}}
+
+\expandafter\GetBranch\dotGitHEAD\relax
+
+\openin\myfilehandle=.git/refs/heads/\branch\relax
+
+\begingroup\endlinechar-1
+  \global\read\myfilehandle to \commit
+\endgroup
+\closein\myfilehandle
