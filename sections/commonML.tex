@@ -5,6 +5,30 @@ This chapter is dedicated to the most common ML algorithms, a major part of the 
 \todo[inline]{Find better paragraph layout}
 
 \section{Linear Regression}
+
+	The Linear regression problem correspond to find a linear mapping $f(x)$ based on noisy observation $y = f(x) + \epsilon$, where $\epsilon$ is a noise. 
+	Finding the regression function require : 
+	\begin{itemize}
+		\item Choice of parameters (function classes, dimension)
+		\item Choice of probabilistic model (Loss function, ...)
+		\item Avoiding under and overfitting
+		\item Modeling uncertainty on data
+	\end{itemize}
+
+	\begin{definition}
+			\begin{itemize}
+				\item $p(x, y)$ is te joint distribution
+				\item $p(x)$ and $p(y)$ are the marginal distributions
+				\item $p(y|x)$ is the conditional distribution of $y$ given $x$
+			 	\item in the context of regression, $p(y|x)$ is called likelihood, $p(x|y)$ the posterior, $p(x)$ the prior and $p(y)$ the marginal likelihood or evidence.
+			 	\item they are related by the Bayes' Theorem : $p(x|y) = \frac{p(y|x)p(x)}{p(y)}$ 
+			\end{itemize}
+		\end{definition}
+
+	\subsection{Conjugacy} % (fold)
+	\label{sub:conjugacy}
+		In order to compute the posterior, we require some calculations which imply the prior, and can be intractable as a closed form. But given a likelihood, it can exist prior which give closed-form solution for the posterior. This is the principle of conjugacy (between the likelihood and the prior)
+	% subsection conjugacy (end)
 	\subsection{Maximum Likelihood Estimation (MLE)}
 
 		\subsubsection*{Closed-Form Solution}

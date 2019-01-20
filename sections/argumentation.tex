@@ -7,18 +7,146 @@ This chapter are notes from the Imperial Course Machine Arguing from Francesca T
 \paragraph{introduction} % (fold)
 \label{par:introduction}
 
-Argument Framework are a field in AI which provide way of evaluate any debate problem. It is useful to resolve conflict, to explain decision or to deal with incomplete information. 
+	Argument Framework are a field in AI which provide way of evaluate any debate problem. It is useful to resolve conflict, to explain decision or to deal with incomplete information. 
 % paragraph introduction (end)
-\section{AA}
+\section{Abstract Argumentation}
 
-\subsection{Simple AA}
-\subsection{AA + Suppport}
-\subsection{Argument Mining}
-\subsection{AA with PrefProb}
-\section{ABA}
-\subsection{Simple ABA}
+	\subsection{Simple AA}
 
-\subsection{ABA more DDs}
-\subsection{p-acyclic ABA}
+		\begin{definition}
+		 		an  \textbf{AA framework} is a set $\mathrm{Args}$ of arguments and a binary relation $\mathrm{attacks}$. $(\alpha, \beta)\in \mathrm{attacks}$ means $\alpha$ attacks $\beta$.
+		\end{definition} 
+
+		\paragraph{Semantics in AA} 
+			In order to define a "winning" set of argument, we need to provide semantics over the the framework. This is like recipes which determine good set of arguments. 
+
+		\begin{definition}
+			\begin{itemize}
+				\item \textbf{conflict-free}
+				\item \textbf{admissible:} c-f and attacks each attacking argument.
+				\item \textbf{preferred:} maximally admissible.
+				\item \textbf{complete:} admissible + contains each argument it defends.
+				\item \textbf{stable:} c-f + attacks each argument not in it.
+				\item \textbf{grounded:} minimally complete.
+				\item \textbf{sceptically preferred:} Intersection of all prefered.
+				\item \textbf{ideal:} maximal admissible and contain in all prefered (i.e. in the sceptically preferred).
+			\end{itemize}
+		\end{definition}
+
+		\begin{definition}
+			\textbf{Semi-stable extension:} complete such as $A\cup A^+$ is maximal. $A^+$ is the set of attacked argument by $A$.
+		\end{definition}
+
+		\todo{add ref to ASPARTIX and CONARG}
+
+	\subsection{Algorithms for AA}
+
+		\paragraph*{Computing Grounded extensions}
+		Use the same algorithms as grounded labelling, but only output the IN arguments as the grounded extensions.\\
+		the grounded extensions in unique. 
+
+		\paragraph{Computing the grounded labelling:}
+		Here is an algorithm to compute a grounded labelling\\
+
+		\begin{algorithm}[H]
+			\KwData{An AA Framework}
+			\KwResult{The grounded Labelling}
+			Label all unatacked argument with IN \;
+			\While{The IN and the OUT are not stable}
+			{
+				Label OUT the arguments attacks by IN \;
+				Label IN the arguments only attacked by OUT\;
+			}
+			Label the still unlabelled UNDEC\;
+			\caption{Computing the grounded labelling}
+		\end{algorithm}
+
+		\paragraph{Computing membership in preferred/grounded/ideal extensions;} In order to compute membership, we use Dispute Tree.
+
+		We compute a dispute tree for an argument, and apply the different semantics which are easier to compute on a tree than on a graph.
+
+
+		\todo{add algos of computing dispute tree + def of semantics}
+
+		\begin{algorithm}[H]
+			\KwData{An AA Framework, and a arg $\alpha$}
+			\KwResult{Finite or infinite dispute tree corresponding to $\alpha$}
+			add a root node Label $\alpha$ as proponent \;
+			\While{The tree is not stable}
+			{
+				for every $\beta \in$ proponent, and for every $(\gamma, \beta)$ add a child-node $\gamma$ as opponent\;
+				for every $\beta \in$ opponent, and for every $(\gamma, \beta)$ add a node $\gamma$ as proponent in the limit of one child-node per opponent \;
+			}
+			\caption{Computing dispute Tree}
+		\end{algorithm}
+
+
+		\paragraph{Computing stable extension:} We use answer set programming with logical program. 
+		
+
+	\subsection{AA with Suppport}
+
+		\subsubsection[BAA]{Bipolar Abstract Argumentation}
+			We add a \textbf{Support} relation to a classic AA Framework (BAA = $\langle Args, Attacks, Supports \rangle$). \\There are different semantics :
+
+			\paragraph*{Semantics in BAA with deductive support}
+			We can deduce an AA Framework from a BAA with $Attacks' = Attacks \cup Attacks_{sup} \cup Attacks_{s-med}$ with 
+			\begin{definition}
+				\begin{itemize}
+					\item $Attacks_{sup}$ is \textbf{the supported attacks}  $\implies \alpha$ attacks every argument that its supports attacks (supports of supports are supports)
+					\item $Attacks_{s-med}$ is the super mediated attacks  $ \implies \alpha$ attacks every argument whose supports an argument attacked or $attacked_{sup}$  by $\alpha$ 
+				\end{itemize}
+			\end{definition}
+
+			Then, we apply the AA semantics to $\langle Args, Attacks' \rangle$. Those semantics are the d-X semantics, where X replace every semantic from AA (grounded, complete, etc.)
+			\paragraph*{QuAD Framework}
+			We focus here one the QuAD (\textbf{Quantitative Argument Debate}) which add a numerical strenght to any argument, and give rule for updating strenght regarding the supporters or attackers.
+			
+
+			\begin{definition}
+				\begin{itemize}
+					\item We define the QuAD Framework as $\langle \mathcal{A}, \mathcal{C}, \mathcal{P}, \mathcal{R}, \mathcal{BS}\rangle $ Where $\mathcal{A}$ is the set of answer arguments, $\mathcal{C}$ is the set of con args, $\mathcal{P}$ are the pro args, which are disjoint, $\mathcal{R}$ the relation (with $\mathcal{R}^+$ the supporters and $\mathcal{R}^-$ the attackers) and $\mathcal{BS}$ the Base Score, which give score to each args. 
+					\item The \textbf{Base funcion} is $f(v_1, v_2) = v_1 + (1-v_1)v_2$
+					\item the \textbf{aggregation function} as a recursive definition : 
+					\begin{align*}
+						& n=0 \implies \mathcal{F}(S)=0\\
+						& n=1 \implies \mathcal{F}(S)= v_1\\
+						& n=2 \implies \mathcal{F}(S)= f(v_1, v_2)\\
+						& n>2 \implies \mathcal{F}(S)= f(\mathcal{F}(S\backslash \{v_n\}, v_n))
+					\end{align*}
+					\item the \textbf{Combination function} is defined by: \\
+					$c(v_0, v_a, v_s) = v_0 - v_0 \cdot |v_s-v_a|$ if $v_a \geq v_s$\\
+					$c(v_0, v_a, v_s) = v_0 + (1 - v_0 ) \cdot |v_s-v_a|$ if $v_a < v_s$
+					\item the \textbf{Strength Function} is defined as : $\mathcal{S}(\alpha) = c(\mathcal{BS}(\alpha), \mathcal{F}(SEQ_S(\mathcal{R}^-(\alpha))), \mathcal{F}(SEQ_S(\mathcal{R}^+(\alpha))))$
+				\end{itemize}
+			\end{definition}
+
+			The DF-QuAD (for \textbf{Discontinuity free}-QuAD) algorithm is simply to apply these semantics to a BAA framework, in setting initial weights to any arguments. 
+
+
+	\subsection{Argument Mining}
+	\subsection{AA with Preference}
+		When taking into account preference in a AA, (in the form $X < Y = X$ is less prefered to $Y$) we can still use the classic AA semantics but we can improved it by using the preferences informations :
+		\begin{itemize}
+			\item By \textbf{deleting attacks} (an $(x, y)$ attacks succeed iff $x \nless y$) 
+			\item By \textbf{reversing attacks} (if $(x, y)$ and $x < y$ then we reverse by replacing this attack by $(y, x)$).
+			\item By \textbf{Selecting Amongst extension}, using the preference to select extension with the same extension (ex : differentiate 2 stable extensions). Look at \textbf{Rich PAF} for some formal definition.
+		\end{itemize}
+	\subsection{AA with Probabilities}
+
+\section{Assumption-Based Argumentation}
+	
+	\textbf{Assumption Based Argumentation} introduce arguments as Assumptions $a \in \mathcal{A}$, or deduction $\sigma$ with premises and conclusions achevied with Rules $R \subseteq \mathcal{R}$(deductive rules, as $q \wedge a \implies p$) defined in a language $\mathcal{L}$ 
+	\subsection{Simple ABA}
+
+		We can define \textbf{attacks} in ABA : an argument $A_1 \vdash \sigma_1$ attacks $A_2 \vdash \sigma_2$ iff $\sigma_1$ is the contrary of one of the assumptions in $A_2$.
+	\subsection{ABA more DDs}
+	\subsection{p-acyclic ABA}
+
+		\begin{definition}
+			a \textbf{positive-acyclic ABA} is a AB framework where the dependancy graph of AB is acyclic.\\
+			The \textbf{dependancy graph} is a graph of all the rules, where assumption ($\mathcal{A}$) are deleted. 
+		\end{definition}
+
 \section{ArgGame}
 % chapter argumentation_framework (end)

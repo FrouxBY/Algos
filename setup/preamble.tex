@@ -1,6 +1,6 @@
 %!TEX root = ../master.tex
 
-\documentclass[11pt,twoside,a4paper,openright]{report}
+\documentclass[11pt,a4paper, openany]{report}
 
 \usepackage[utf8]{inputenc}
 % Make latex understand and use the typographic
@@ -64,8 +64,8 @@
 \titleformat*{\section}{\normalfont\Large\bfseries}
 \titleformat*{\subsection}{\normalfont\large\bfseries}
 \titleformat*{\subsubsection}{\normalfont\normalsize\bfseries}
-\titleformat*{\paragraph}{\normalfont\normalsize\bfseries}
-\titleformat*{\subparagraph}{\normalfont\normalsize\bfseries}
+% \titleformat*{\paragraph}{\normalfont\normalsize\bfseries}
+% \titleformat*{\subparagraph}{\normalfont\normalsize\bfseries}
 
 % Clear empty pages between chapters
 \let\origdoublepage\cleardoublepage
@@ -80,9 +80,11 @@
 \pagestyle{fancy}
 \fancyhf{} %delete everything
 \renewcommand{\headrulewidth}{0pt} %remove the horizontal line in the header
-\fancyhead[RE]{\small\nouppercase\leftmark} %even page - chapter title
-\fancyhead[LO]{\small\nouppercase\rightmark} %uneven page - section title
-\fancyhead[LE,RO]{\thepage} %page number on all pages
+\fancyhead[R]{\small\nouppercase\leftmark} %even page - chapter title
+\fancyheadoffset[R]{2cm}
+\fancyhead[L]{\small\nouppercase\rightmark} %uneven page - section title
+\fancyfoot[L]{\thepage} %page number on all pages
+\fancyfoot[R]{Branch : \texttt{\branch}} %git branch
 % Do not stretch the content of a page. Instead,
 % insert white space at the bottom of the page
 \raggedbottom
@@ -98,6 +100,7 @@
   bibencoding=utf8
   ]{biblatex}
 \addbibresource{bib/mybib}
+\usepackage{csquotes}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Misc
@@ -146,6 +149,7 @@
 
 %% Adition by Froux 
 \usepackage{listings} % Required for insertion of code
+\usepackage[boxed]{algorithm2e}
 \usepackage{courier} % Required for the courier font
 \usepackage{lipsum} % Used for inserting dummy 'Lorem ipsum' text into the template
 \usepackage{tikz} % Used for drawing figures and graphs
