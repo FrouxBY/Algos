@@ -2,4 +2,56 @@
 \chapter{Ensemble Algorithms} % (fold)
 \label{cha:ensemble_algorithms}
 
+
+Idea : Aggregate the predictions of a group of predictors (either classifiers or regressors)
+
+In many case the aggregated answer is better than best individual prediction. \todo[inline, color=green]{add illustration from ML for imaging course}
+
+Even weak learner can achieve high accuracy, provided there are un sufficient number and sufficently diverse. 
+
+\todo[inline, color=green]{Voting toy exemple ?}
+
+\begin{definition}
+	\begin{itemize}
+		\item Homogenous Ensemble Learning
+		Use the same class of ML model (which are Weak Learner)
+		\item Heterogenous Ensemble Learning
+		Use different ML model
+		\item  Sequential : Base Learners are added one at a time, mislabelled
+examples are upweighted each time(Ex : Boosting)
+		\item Parallel : many independent base learners are trained
+simultaneously and then combined (Ex : Voting, Bagging, Random Forest)
+	\end{itemize}
+\end{definition}
+
+\begin{definition}
+	\emph{Weak Learner} :  is defined to be a classifier that is only slightly
+correlated with the true classification (0.5 for bi-classifier)
+\end{definition}
+
+
+\section{Bagging : Boostrap Aggregating}
+
+	Reduce model variance through averaging
+	\todo[inline]{Add Bootstrapping 3 steps and Aggregating}
+
+	\subsection{Outof-bag error}
+
+\section{Boosting}
+
+	\subsection{Principle}
+	Rather than building independent weak learners in parallel and
+aggregating at end:
+– build weak learners in serial
+– but adaptively reweight training data prior to training each new weak learner
+– in order to give a higher weight to previously misclassified examples
+
+	\subsection{Exemple ?}
+
+\subsection{Several variants}
+• Adaboost (adaptive boosting)
+– Originally for classification
+– Can be used for regression too
+• Gradient Tree Boosting
+• XGBoost
 % chapter ensemble_algorithms (end)
