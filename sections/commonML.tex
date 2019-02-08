@@ -56,13 +56,13 @@ Based on the Probabilistic Inference Course of Marc Deisenroth (Imperial College
 				Then Joint distributions are the product of cliques in the graphs, and the full joint (of all variables) is the product of the joint of the maximum cliques
 
 				\[
-					p(x) = fra{1}{Z} \multiply_C \psi_C(x_C)
+					p(x) = fra{1}{Z} \Pi _C \psi _C(x_C)
 				\]
-				Where C describe a maximal clique, $x_C$ all the variable in C, $\psy_C$ the clique potential and Z a normalisation constant. 
+				Where C describe a maximal clique, $x_C$ all the variable in C, $\psi_C$ the clique potential and Z a normalisation constant. 
 
 				Check for the condiational independance : Check if when remmoving the observable variable there is no path between two set of random variable.
 
-				The potentials can be seen as Energy Functions, which mean we can write $\psy_C(x_C) = exp(-E(x_C))$ with E some energy functions, and then $-log(p(x)) = \sum_C E(x_C)$ is the sum of energies of the clique potential.
+				The potentials can be seen as Energy Functions, which mean we can write $\psi_C(x_C) = exp(-E(x_C))$ with E some energy functions, and then $-log(p(x)) = \sum_C E(x_C)$ is the sum of energies of the clique potential.
 
 
 				\todo[inline]{Add Image Denoising exemple}
