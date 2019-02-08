@@ -1,0 +1,105 @@
+%!TEX root = ../master.tex
+\chapter{Imaging} % (fold)
+\label{cha:imaging}
+
+\section{Image Classification}
+
+	\subsection{Features and Classifier}
+
+	\subsection{Feature Extraction - without ML}
+
+	\begin{itemize}
+	 	\item Why features ?
+	 	\item What features should be : \\
+	 		– Distinctive and discriminative
+			– Local (to enable establishing correspondences)
+			– Invariant to viewpoint changes or transformations (translations/rotations)
+			– Invariant to illumination changes
+			– Efficient to compute
+			– Robust to noise and blurring
+			– Should be hierarchical
+
+		\item Many options possible : – Intensities
+									– Gradient
+									– Histogram
+									– SIFT
+									– SURF
+									– BRIEF
+		\item Pixel level bad : Not discriminative, Localiser and does not represent local pattern, not invariant to transformation. 
+		\item Patch Level : More discriminative, Not necessarily rotation invariant, semi-localised. Use Convolution for patch. 
+		\item Image Level : discriminative, Not localised, not necessarily rotation invariant. Get a feature map where each pixel correspond to local pattern
+	 \end{itemize} 
+
+	 How to make rotation invariant ? $ \rightarrow $ Use Histogram.
+	 \subsubsection{Filtering}
+
+		- Use filter to identify features such as gradient, edge detection.\\
+		- Gradient are invariant to absolute illumination.
+
+	\subsubsection{SIFT}
+
+	\begin{itemize}
+		\item Scale-space Extrema Detection : For all scale, compute convolution with gaussian (blur at different level) and compute the difference of each scaled guassian, then Detect local extrema of Differences
+		\item Keypoint Localisation : 
+		\item Orientation Assignment : Take a small window around the keypoint location.An orientation histogram with 36 bins
+		covering 360 degrees is created.
+		Each pixel votes for an orientation bin,
+		weighted by the gradient magnitude
+		after applying a Gaussian filter with
+		he keypoint scale !).
+		The keypoint will be assigned an
+		orientation, which is the mode of the
+		distribution
+		\item Keypont descriptors.
+	\end{itemize}
+
+	\subsubsection{OHoG (Histogram of Gradient)} % (fold)
+	\label{sub:hog_}
+	
+	% subsection hog (end)
+	
+	\subsubsection{SURF (Speeded-Up Robust Features)} % (fold)
+	\label{sub:surf}
+	
+	% subsection surf (end)
+
+	\subsubsection{BRIEF (Binary Robust Independant Elementary Features)} % (fold)
+	\label{sub:brief_}
+	
+	% subsection brief_ (end)
+
+	\subsubsection{Local binary Patterns} % (fold)
+	\label{sub:local_binary_patterns}
+	
+	% subsection local_binary_patterns (end)
+
+	\subsubsection{Haar features} % (fold)
+	\label{sub:haar_features}
+	
+	Convolution ineficient $\rightarrow$ Faster computation via integral images S
+	% subsection haar_features (end)
+	
+	\subsection{with ML} % (fold)
+	\label{sub:with_ml}
+	
+		\todo{Add Classical ML pipeline for computer vision (images, features, classification)}
+
+		Classification or regression model, many options : Logistic regression, Naives Bayes, K-Nearest neighbors, Support vector Machines (does not deal good with computer vision \todo{why ?}, Boosting, Decision/Random forsest, Neural network.
+
+		Boosting and Decision trees are Ensemble forests. 
+	% subsection with_ml (end)
+
+	\todo[inline]{add bias-variance error explanation in common ML}
+
+	\section{Segmentation}
+
+	 	- Quantify analysis\\
+	 	- Location and extent of object\\
+	 	- Generating 3D models for simulation\\
+
+
+		\subsection{Semantic Segmentation}
+
+
+
+% chapter imaging (end)
