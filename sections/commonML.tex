@@ -99,9 +99,17 @@ Based on the Probabilistic Inference Course of Marc Deisenroth (Imperial College
 	\label{sub:conjugacy}
 		In order to compute the posterior, we require some calculations which imply the prior, and can be intractable as a closed form. But given a likelihood, it can exist prior which give closed-form solution for the posterior. This is the principle of conjugacy (between the likelihood and the prior)
 	% subsection conjugacy (end)
-	\subsection{Maximum Likelihood Estimation (MLE)}
 
-		\subsubsection*{Closed-Form Solution}
+	\subsection{Maximum Likelihood Estimation (MLE)}
+	In order to obtain the parameters, we need to choose a quantity to optimize. The first and most common idea is to choose the Likelihood as a cost function to optimize. The seems natural because the likelihood represent the probability given the $X$ variables to obtain the observed variables $Y$ and we want this to be maximum on the known data (which are the training set).
+
+	\[
+		\theta^* = \arg \max_{\theta} p(y | X, \theta)
+	\]
+
+	To find the desired parameters that maximize the likelihood, we typically do gradient ascent (or gradient descent on the negative likelihood). For numerical reasons, we apply the log-transformation to the probleme and minimize the negative log-likelihood. 
+
+	\subsubsection*{Closed-Form Solution}
 
 			In some cases, a closed-form solution exist, which make computation easy (but not necesseraly cheap)
 	\subsubsection{Maximum A Posteriori Estimation (MAP)}
