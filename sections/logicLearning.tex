@@ -1,0 +1,51 @@
+%!TEX root = ../master.tex
+\chapter{Logic-Based Learning} % (fold)
+\label{cha: logic_learning}
+
+	\todo{add ref to lecturer}
+	\section{Inductive Logic Programming (ILP)} % (fold)
+	\label{sec:inductive_logic_programming}
+		
+		\subsection{Introduction to Concept Learning}
+
+			In Concept Learning we aim to compute a definition of a concept, expressed in a given langage (called \emph{hypothesis space}) that satisfies positive exemple and none of negatives ones. As an exemple, it can be a regexp which can match all words of a set, and none of an other set (see Regexp Golf) 
+
+
+
+		\paragraph*{Machine Learning Task}
+			The Inductive Logique Programming is a subset of Machine Learning wgere prior knowledge are expressed in declarative language. The task is then a search problem for an hypothesis that would minimise a loss function.
+
+		Given : 
+		\begin{itemize}
+			\item A language of examples $L_e$
+			\item a language of hypotheses $L_h$
+			\item an unknown target function $f: L_e \rightarrow Y$
+			\item a set $E$ of training exemples $E = \{ (e_i, f(e_i))\} $
+			\item e loss function
+		\end{itemize}
+		We want to find the hypothesis $h \in L_h$ that minimises the loss function ($h = \arg \min_{h_j \in L_h} \text{loss}(h_j, E)$). We want the hypothese $h$ to approximates as much as possible the function $h$
+
+		Different loss can be choosed, such as $l(h, E) = \frac{1}{|E|}\sum (f(e_i) - h(e_i)$ or the squared differenced
+
+		\paragraph*{Data Mining Task}
+			 In a Data Mining Task, the objective is also to discover hypothesis, but the loss is replaced by a quality criterion $Q(h, E)$ such that the search is now to find {h} such as $Q(h, E) = \frac{|c(h, E)|}{|E|} \geq \epsilon$. This expresses a notion of coverage. This is essential for the concept learning, as we refer generaly to the set of exemple covered by an hypothesis $h$
+
+		\paragraph{Predictive ILP}
+
+			Given 
+			\begin{itemize}
+				\item A set of observation in $L_e$ with positive examples $E_+$ and negative examples $E_-$ 
+				\item Background knowledge $B$
+				\item hypothesis language $L_h$
+				\item a cover relation (notion of covers and rejects)
+			\end{itemize}
+				we want a the best cover Relation $c(H)=E_+$
+
+			When E is noisy, we can add a quality criterion such as before which act as the precision test. 
+
+		\paragraph{ILP as search of program clauses}
+
+			The ILP machine learning tasks can be seen as search program. Assuming for now that the representing exemple, the hypothesis use the same logical formalism and that we are interested to learn definite clauses, we can look over all $L_h$ the best arg for our criterions.\\
+			The naives method are obviously none computable in most cases. 
+	% section inductive_logic_programming (end)
+% chapter  (end logic_learning)
