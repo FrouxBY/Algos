@@ -2,4 +2,60 @@
 \chapter{Bayesian Algorithms} % (fold)
 \label{cha:bayesian_algorithms}
 
+	\section{Gaussian Process}
+
+		This section is made with a great inspiration from the Probabilistic Inference from Marc Deisenroth (Imperial College London)
+		\subsection{Problem setting} % (fold)
+		\label{sub:problem_setting}
+			For a set of observation $y_i = f(x_i) + \epsilon$ with $\epsilon \sim \mathcal{N}(0, \sigma_\epsilon^2$, we want to fine a distribution over \emph{functions} $p(f)$ that explains the data. It's not exactly the same as a linear regression problem because we do not look for only one function.
+
+			This is a really power full process used in a lot of different problematic thanks to its robustness and known properties (in comparison to deep learning methods).
+
+			\begin{itemize}
+				\item Reinforcement Learning and Robotics
+				\item Bayesian optimization
+				\item Geo-statistics 
+				\item Sensor networks
+				\item Time-series modelling and forecasting
+				\item High-energy physics
+				\item Medical application
+			\end{itemize}
+
+			Formally a Gaussian Process is a multivariate Gaussian distribution with infinite variables (countable or even uncountable).
+
+			\subsection{Definition} % (fold)
+			\label{sub:definition}
+				A Gaussian process is defined by a mean function $m(\dot)$ and a covariance function (=kernel) $k(\dot, \dot)$.
+
+				The mean function represents the average of all the function.\\
+				the Covariance function allows us to compute covariance between any two functions. Notes that the function are unknown, and only this correlations are fully known.
+			% subsection definition (end)
+
+			\subsection{Gaussian Process Inference} % (fold)
+			\label{sub:gaussian_process_inference}
+				
+				Considering $X$ training inputs and $y$ training target, the Bayes' theorem in the case of Gaussian Process become 
+				\[
+					p(f | X, y) = \frac{p(y | f, X)p(f)}{p(y | X)}
+				\]
+				Which gives us a Likelihood $p(y | f, X) = \mathcal{N}(f(X), \sigma^2 \mat I)$, a Marginal Likelihood $p(y | X) = \int p(y | f, X) p (f | X) df$ and a Posterior $p(f |y, X) = \textbf{GP}(m_{post}, k_{post})$
+
+				How can we manage to work with the distribution over function, and then infinite dimension for calculus, etc. ? This is possible because each time you consider only finite sample, computing the joint distribution boils down to work on finite-dimensional multivariate Gaussian distributions
+
+				Then we can use the gaussian properties (including gaussian prior as conjugate, ...) to make prediction : \\
+				(We define $X_*, f_*$, etc as the test data and predicted function)
+				\[
+					p(f(x_*) | X, y, x_*) = \mathcal{N}(m_{post}(x_*), k_{post}(x_*, x_*))
+				\]
+
+				This can also be seen as 
+				\[
+					p(f(x_*) | X, y, x_*) = \mathcal{N}(\text{E}{[f_* | X, y, X_*]}, V{[f_* | X, y, X_*]})
+				\]
+				with $\text{E}[f_* | X, y, X_*] =$ prior mean + "Kalman gain" * error $= m(X_*) + k(X_*, X)(\mat K + \sigma^2_n \mat I)^{-1}(y-m(X))$ and $V [f_* | X, y, X_*] = k(X_*, X_*) - k(X_*, X)(\mat K + \sigma^2_n \mat I)^{-1})k(X, X_*)$
+
+			% subsection gaussian_process_inference (end)
+
+
+		% subsection problem_setting (end)
 % chapter bayesian_algorithms (end)

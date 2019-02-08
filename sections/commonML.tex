@@ -4,6 +4,76 @@
 This chapter is dedicated to the most common ML algorithms, a major part of the notes come from the mml-books.com \todo{Add bibtex reference}
 \todo[inline]{Find better paragraph layout}
 
+
+\section{Graphical Model for Probabilistic Inference}
+
+Based on the Probabilistic Inference Course of Marc Deisenroth (Imperial College)
+
+	\subsection{Probabilistic Pipeline}
+
+	Here is a simple pipeline of the inference process with a model
+
+		\figcap{figures/pipeline_proba}{}{Simple Pipeline of how to build model for inference}{0.8}
+
+	\subsection{Probabilistic graphical Model}
+
+		In order to deal with complex and big probalistic model, we can use different kind of graphs which represent relationships between random variables. We define the random variables as nodes and the probabiistic or functional relationship between variables as edges in the graphs. With them you can :
+		\begin{itemize}
+			\item Visualize the structure
+			\item Have insights into properties (such as conditional independance)
+			\item Design or Motivate new models
+			\item Compute some inference and learning as graphical manipulations
+		\end{itemize}
+
+		There exists 3 kinds of model : Bayesian networks (directed graphical models), Markov random fields (undirected graphical models) and factor graphs (with nodes which are not random variables)/
+
+		\subsubsection{Bayesian Networks}
+
+			\todo[inline]{add basic graphs exemple}
+
+			They are defined by 
+			\begin{itemize}
+				\item Nodes : Random variables
+				\item Shaded nodes: Observed random variables
+				\item Other : Latent Variables
+				\item Edges : (a, b) $\iff$ conditionnal distribution $p(b|a)$
+			\end{itemize}
+
+			\todo[inline]{add graphicals model of linear regression}
+
+			\paragraph*{D-Separation:} A set A of nodes is d-Separated (conditionnaly independant) from B by C iff all path between A and B are blocked. C is tht set of observed variables in the graphical model.
+			\begin{definition}
+				A Path is \emph{Blocked} id it includes a node such that either :
+				\begin{itemize}
+					\item The arrow on the path meet either head-to-tail or tail-to-tail at the node, and the node is in C 
+					\item The arrow meet head-to-head at the node, and neither the node nor any of its descendants is in the set C
+				\end{itemize}
+			\end{definition}
+
+			\paragraph*{Markov Random Fields}
+				Defined by : if X and Y are not connected directly, then X and Y are conditionnaly independant given everything else.
+
+				Then Joint distributions are the product of cliques in the graphs, and the full joint (of all variables) is the product of the joint of the maximum cliques
+
+				\[
+					p(x) = fra{1}{Z} \multiply_C \psi_C(x_C)
+				\]
+				Where C describe a maximal clique, $x_C$ all the variable in C, $\psy_C$ the clique potential and Z a normalisation constant. 
+
+				Check for the condiational independance : Check if when remmoving the observable variable there is no path between two set of random variable.
+
+				The potentials can be seen as Energy Functions, which mean we can write $\psy_C(x_C) = exp(-E(x_C))$ with E some energy functions, and then $-log(p(x)) = \sum_C E(x_C)$ is the sum of energies of the clique potential.
+
+
+				\todo[inline]{Add Image Denoising exemple}
+
+			\paragraph*{Factor Graphs}
+
+				(Un)directed graphical models express a global function of several variables as a product of factors over subsets of those variables
+
+				Factor graphs make this decomposition explicit by introducing additional nodes for the factors themselves
+
+
 \section{Linear Regression}
 
 	The Linear regression problem correspond to find a linear mapping $f(x)$ based on noisy observation $y = f(x) + \epsilon$, where $\epsilon$ is a noise. 
@@ -56,4 +126,5 @@ This chapter is dedicated to the most common ML algorithms, a major part of the 
 	\subsection{Mean and Variance}
 
 	\subsection{Sample function}
+
 
