@@ -2,4 +2,145 @@
 \chapter{Deep Learning} % (fold)
 \label{cha:deep_learning}
 
+\section{Intro}
+	\subsection{Representation Learning}
+
+		Representation Learning is the field where you try to learn the representation (features) of input. Then you can do classification or regression on the representative space.
+
+	\subsection{Deep Learning vrsus classical Representation Learning}
+		\todo[inline]{Add image with where Deep Learning is relative to ML}
+
+
+\section{Optimisation : Gradient Descent}
+	\subsection{Stochastic GD versus Mini-Batch}
+
+		Classicaly the learning is an optimization problem : 
+		\[
+			\hat \theta = \arg \min_\theta \frac{1}{n}\sum^n_1 l(f_\theta(x_i), y_i)
+		\]
+
+		Then we can calculate a gradient
+		\[
+			\nabla_\theta \hat L (\theta) = \frac{1}{n}	\sum^n_1 \nabla_\theta l(f_\theta(x_i), y_i)
+		\]
+
+		There is different possibility to update the parameters, the stochastic way (SGD) which learn only one by one exemple:
+
+		\[
+			\theta^{(t+1)} = \theta^{(t)} - \alpha^{(t)} \nabla_\theta l(f_\theta(x_{t}), y_{t})
+		\]
+
+		And the mini-batch which average the learning on a mini-batch (b < n the data set size) of examples.
+		\[
+			\theta^{(t+1)} = \theta^{(t)} - \alpha^{(t)} \frac{1}{b}\sum^b_1 \nabla_\theta l(f_\theta(x_{tb+i}), y_{tb+i})
+		\]
+
+	\subsection{Convergence rate and computational complexity}
+		
+		\[
+			\mathbb{E}(\hat L(\theta^{(k)} - \hat L(\theta^*))) \leq \frac{\alpha \sigma^2}{2m}+ (1 -\alpha m )^k (\hat L(\theta^{(0)} - \hat L(\theta^*)))
+		\]
+
+		With conclusion : 
+		\begin{itemize}
+		 	\item Small step size $\implies$ \emph{Slower} initial convergence and Stalls at \emph{more} accurate result
+			\item Large step size $\implies$ \emph{Faster} initial convergence and Stalls at \emph{less} accurate result
+			\item Small batch size $\implies$ Stalls at \emph{less} accurate result and \emph{Lower} iteration cost
+			\item  Small batch size $\implies$ Stalls at \emph{more} accurate result and \emph{Higher} iteration cost
+		\end{itemize}
+
+	\subsection{Deep Learning is not convex}
+			which mean you don't know if local extrema is global extrema, and this is problematic for gradient descent method, which find local extrema.
+
+			\todo[inline]{Add ref to convexity}
+
+
+\section{Maximum Likelihood estimation}
+
+	\todo[inline]{Kullback-Leibler divergence}
+	\todo[inline]{cross entropy}
+	\todo[inline]{Log-likelihood}
+	\todo[inline]{$L_2$ as MLE} 
+	\todo[inline]{Logistic Regression}
+
+\section{Regularization}
+
+	In order to avoid certain problem (overfiting, saturation...) regularization can be added to the loss function, (can be named weight decay). This works in restricting the hypothesis class, and find explanation in different way, such as Ockahm Razor. 
+
+	\subsection{Generality}
+		General form : 
+		\[
+			\min_\theta \hat L(\theta) + \beta R(\theta)
+		\]
+		\begin{itemize}
+			\item Soft constraint
+			\item Equivalent to hard constraint (Lagrangian)
+			\item equivalent to the Maximum a posteriori interpretation (see Common ML)
+		\end{itemize}
+
+		The regularization reduce the capacity of the model, so a trade-off exist between large capacity but under-regularisation (overfitting or not convergence) and small capacity with over-regularization
+
+		\paragraph*{Bayesian view}
+			todo{fill MAP equation}
+
+	\subsection{Geometric interpretation}
+
+	\subsection{$L_1$ Regularization}
+
+	\subsection{Noisy input}
+		We can show that add an i.i.d noise $\epsilon \sim \mathit{N}(0, \beta \mat I)$ is equivalent to weight decay.
+	\subsection{Data Augmentation}
+
+	\subsection{Early stopping}
+
+	\subsubsection*{Dropout}
+
+	\subsection{Covariate shift}
+
+	\subsection{Batch normalization}
+
+	\subsection{Input pre-processing}
+		\begin{itemize}
+			\item Zero-centered data
+			\item normalized data
+			\item Decorrelated data
+			\item Whitened data
+		\end{itemize}
+\section{Deep Feed-forward network}
+	\subsection{Perceptron}
+		\paragraph*{Activation function}
+			\begin{itemize}
+				\item tanh
+				\item sigmoid
+				\item ReLU -> Logistic regression
+		\end{itemize}
+
+		\paragraph*{Multi-layer perceptron}
+			Single layer is not enough
+			\todo[inline]{XOR Problem}
+			\begin{theorem}
+				A perceptron with one hidden layer of finite width can arbitrarily accurately approximate any continuous function on a compact
+				subset of $\mathbb{R}^n$ (under mild assumptions on the activation function)
+			\end{theorem}
+
+		\paragraph*{What is better: Depth or Width ?}
+
+		\paragraph*{Popular output layer types}
+			\begin{itemize}
+				\item 1D Regression
+				\item Binary classification
+				\item nD Regression
+				\item Softmax (multi-class classification)
+			\end{itemize}
+
+		\paragraph*{Backpropagation}
+			Use chain rule to calculate all the layer gradient relative to the output gradient.
+			\todo[inline]{Differentiable programming}
+
+
+\section{Deep convolutionnal Neural network}
+
+	See Imaging chapter first
+
+
 % chapter deep_learning (end)
