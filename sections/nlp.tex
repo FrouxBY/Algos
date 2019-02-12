@@ -2,6 +2,38 @@
 \chapter{NLP} % (fold)
 \label{cha:nlp}
 
+
+		\section{What is NLP}
+
+			Natural language Processing (or Natural Language Understanding sometimes) is the field which try to make machine understand natural human language. Indeed we have developped really complex way of communication thanks to vocaculary, grammar, syntax and semanticDomain a the intersection between AI, Computer Sciences, Linguistics and Cognitive Science.
+
+			The goal are to undersand NL, execute requested task and produce back NL as answer. The field generally focus on written language as speech and handwritten require only speech-to-text and OCR to be computed with NLP models. 
+
+			\subsection{Linguistic required}
+
+				Working on NLP require some knowledge of linguistics in order to understand the different problematics and the possible solutions
+				\begin{itemize}
+					\item  a word
+					\item Word Segmentation (tokenization and decompounding)
+					\item Lemmatization
+					\item Morphological analysis (POS Tagging, Suffixes (unhappy-happy), gender, number and tense)
+					\item Grammar (phrase-structure)
+					\item Semantics (Lexical meaning and compositionnal meaning)
+					\item References and relationship
+				\end{itemize}
+
+			\subsection{NLP Application}
+				This are different kind of applications of NLP models :
+				\begin{itemize}
+					\item Sentiment analysis
+					\item Fake News/Deception detection
+					\item Offensive Language detection and categorisation
+					\item Question answering
+					\item Machine translation
+					\item Text summarisation
+					\item Dialog System (Phone assistant)
+				\end{itemize}
+
 	\section{How to represent word}
 
 		\subsection{Bag of Word}
@@ -26,16 +58,115 @@
 			\paragraph*{Exemple of vector representation}
 		
 			\paragraph*{Other tricks}
+				\begin{itemize}
+					\item Treating common words pairs as single "words"
+					\item Subsampling frequent words to decrease the number of training examples
+					\item Using hierachical softmax
+				\end{itemize}
 
 			\paragraph*{Other kind of embeddings word}
+				\begin{itemize}
+					\item Continuous Bag of Words (CBOW)
+					\item Global Vectors for Word Representation (Glove)
+					\item Contextualised word embeddinfs (ELMo and BERT 2018)
+				\end{itemize}
 
+			Contecuatlised word embeddings seems really powerful, but really costly
 
 
 	\section{Some Algorithm for NLP}
 
+		NLP use classifier for different tasks, such as sentiment analysis, fake news, authorship  attribution, detection of suicide risk, patient risk assessment, etc.
+
 		\subsection{Naives Bayes Classifier}
 
-		Used a lot in anti-spam algorithm.
+			Used a lot in anti-spam algorithm
+
+			Work with a training corpus, use feature vector of word input $x = [x_1, ..., x_I]$
+			and we are looking for the output class $\hat y = \arg \max_y P(y|x) = \arg \max_y P(x | y)P(y)$
+
+			We assume in Naive Bayes that the features of $x$ are independant. Which makes possible to write : 
+			\[
+				\hat y = \arg \max_y P(y) \Pi_1^I P(x_i | y)
+			\]
+			which lead in practise to
+			\[
+				P(y) = \frac{N_y}{N_x} \text{ and } P(x_i | y) = \frac{\text{count}(x_i, y)+1}{\Sigma_{x\in V}(\text{count(x, y)+1})}
+			\] with $V$ the vocabulary across classes
+
+			\paragraph*{Problems}
+
+				\begin{itemize}
+					\item All featurees are equally important (this is not the case generally)
+					\item There is a strong conditonal independence assumption
+					\item The context is not taken into account
+					\item Unknown words are not tractable
+				\end{itemize}
+
+		\subsection{Logistic Regression}
+			See Chapter Regression for details, basically we are adding weight to each features $x_i$ of $x$ \\
+			example : The Movie is Bad $\rightarrow$ Bad might be more important than movie in sentiment analysis.
+
+			\paragraph*{Problems}
+				
+		\subsection{Neurals Networks}
+			See DeepLearning for details of what is a neural networks. \\
+
+			The imput of neural networks can be one-hot representation of words, automatically learn dense feature representations (word embedding within the NN) or pre-trained dense representation (from another models)
+
+			NN are used because of the automatic learning of features which are hard to describe humanly (because of grammar, semantics, etc) and the non-linearity, their flexibility to fit highly complex data. 
+
+			But their require lot of data for training. 
+
+
+		\subsection{CNNs in NLP}
+
+			\subsubsection{Context approach}
+
+			\subsubsection*{Character-Level Approach}
+
+		\subsection{Recurrent Neural Networks (RNN)}
+
+		\section{Preprocessing in NLP}
+
+		\section{Evaluation of NLP model}
+
+
+		\section{Language Model}
+
+			\subsection{Basic N-gram language models}
+
+			\subsection{Evaluation of language models}
+
+			\subsection{Sparsity}
+
+		\section{Structured prediction}
+
+			\subsection{Part-Of-Speech tagging (POS)}
+
+				\paragraph*{Why do we need POS tagging}
+
+				\paragraph*{tagset}
+
+				\paragraph*{baseline method}
+
+
+				\paragraph*{POS ambiguities}
+			\subsection{Probabilistic POS tagging}
+
+			\subsection{Hidden Markov Model (HMM) tagger}
+
+			\subsection{Maximum Entropy Markov Model (MEMM) for POS tagging}
+
+			\subsection{Other approachs}
+				CRF
+
+			\paragraph*{Performance}
+				MEMM get 97\% against 98\% for human
+
+			\paragraph*{Tools}
+				Spacy, NLTK
+
 
 		
 % chapter nlp (end)
