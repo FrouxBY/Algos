@@ -5,4 +5,90 @@
 	\section{Logistic Regression}
 
 		\todo{Add Logistic regression with the content of Probabilistic Inference}
+
+		\subsection{Logistic Sigmoid}
+
+			For a binary classification problem -- with two class $C_1$ and $C_2$ -- We want to compute $p(C_1 | x)$ (or equivalently $p(C_2 | x)$ ) the posterior in order to classify an input $x$. \\
+			If we write $a = \log\frac{p(C_1 | x)}{p(C_2 | x)}$, then the sigmoid of $a$ is the desired posterior. 
+			\[
+				\sigma(a) = \frac{1}{1 + \exp(-a) }= p(C_1 |x)
+			\]
+
+			This can be generalized to multiclass thanks to SoftMax function, Boltzmann distribution and/or normalized exponential.
+
+		\subsection{Implicit Modeling Assumptions}
+
+			In case of multiclass, this is perfectly tractable assuming some conditions. 
+
+			Here we assume : $p(x|C_k) = \mathit{N}(x |\mu_k, \Sigma)$, every likelihood are gaussian and sharing a common covariance matrix $\mat \Sigma$.
+
+			Then $a$ can be rewritten with a simple and tractable form (depending on $k$). For k = 2, we have :
+			\[
+				p(C_1 | x) = \sigma(a) = \sigma(\theta \T x + \theta_0)
+			\]
+			with $\theta = \Sigma^{-1}(\mu_1 -\mu_2)$ and $\theta_0 = \frac{1}{2}(\mu_2 -	\mu_1) \T \Sigma^{-1}(\mu_2 - \mu_1) + \log \frac{p(C_1)}{p(C_2)} $\\
+			Here the argument of the sigmoid is linear in $x$ which mean the Decision boundary is a linear function of $x$.
+
+			notes : If the Covariance are not shared, then it's still tractable, and we get quadratic decision boundaries.
+
+		\subsection{Model Specification}
+
+			Sometimes we want to put assumptions on the posterior model. For a binary classifier, with output $y\in \{0, 1\}$ we might want a bernoulli posterior $p(y | x, \theta) = \text{Ber}(y |\mu(x))$. Then the bernoulli parameters need to be a parameters of x. The idea is to have a linear model in $x$ such as $\theta \T x$. Combining this with the logistic function gives :
+			\[
+				p(y | x, \theta) = \text{Ber}(y | \sigma(\theta \T x))
+			\]
+
+		\subsection{Model Fitting}
+			Now that we have some model assumption, lets look to the parameters $\theta$ estimations. We can do Maximum Likelihood Estimation (MLE) or Maximum-A-Posteriori (MAP). Writting down the likelihood gives :
+			\[
+				p(y | X, \theta) = \prod^N_{n=1} \mu^{y_n}_n(1-\mu)^{1-y_n} \; \; \text{ with } \mu_n = \sigma(\theta \T x_n)
+			\]
+			which lead to the following negative log-likelihood :
+			\[
+				\text{NLL} = -\sum^N_{n=1} y_n \log \mu_n +( 1-y_n) \log(1-\mu_n)
+			\]
+			This can be differentiate (easily with chain rule) :
+			\[
+				\frac{dNLL}{d\theta} = - \sum^N_1 (\frac{y_n}{\mu_n} - \frac{1-y_n}{1-\mu_n})\frac{d\mu_n}{d\theta} 
+			\]
+			with for all $n$
+			\[
+				\frac{d\mu_n}{d\theta}  = \sigma(\theta \T x_n)(1- \sigma(\theta \T x_n))x_n\T
+			\]
+			finally : 
+			\[
+				\frac{dNLL}{d\theta} = (\mu - y )\T X
+			\]
+
+			This is not tractable with a closed-form solution, but Gradient descent methods can be used as it exists a Unique global optimum !
+
+			\paragraph*{Comments on MLE}
+				- In the case of a linearly separable classes, then the decision boundary between the 2 classes is not unique (any separation hyperplan works) and the likelihood will tend to infinity\\
+				- Overfitting is a again a problem when we work with features $\phi(x) $ instead of $x$\\
+				This can be adressed with MAP (to some extents at least)
+
+				\paragraph*{Notes on MLE} : as a recall, the Log-Posterior is $\log p(\theta | X, y) = \log p(y | X, \theta)+\log p(\theta) + const $. There is no closed-form solution for $\theta_{MAP}$ but still numerical maximization is possible. With a gaussian prior on the parameters ($p(\theta) \sim \mathcal{N}(\mu, \mat \Sigma)$) the log prior is : $\frac{1}{2}(\theta - \mu)\T \Sigma ^{-1} (\theta - \mu) + \text{cte}$ which lead to the following gradient $\frac{d \log p(\theta)}{d\theta} = \Sigma^{-1} (\theta - \mu)$
+
+
+			\paragraph*{Predictive Labels: } more than just a predicted label, the output is a parameter of a bernoulli variable, which mean it gives the probability of the input to be in that class. 
+			\todo[inline]{Add graphical exemples}
+
+		\subsection{Bayesian Logistic Regression}
+			An other way to estimates the parameters is to do bayesian inference on the parameters.
+			Now we are given a datased $\mathcal{D}$ of N exemples, and we want to compute a posterior distribution on the parameters $\theta$. \\
+			We set Gaussian Prior $p(\theta) \sim \mathcal{N}(\theta |0, \mat \Sigma_0)$ and we get 
+			\[
+				p(\theta | \mathcal{D}) = \frac{p(\theta)p(y|\theta , X)}{p(y|X)} = \frac{\mathcal{N}(\theta |0, \mat \Sigma_0)\prod^N \text{Ber}(\sigma(x_n \T \theta)}{\int \mathcal{N}(\theta |0, \mat \Sigma_0)\prod^N \text{Ber}(\sigma(x_n \T \theta))d\theta}
+			\]
+
+			This is a nice equation, but there is no analytic solution, therefore approximation are necessary.
+
+		\subsection{Lapalce Approcimation}
+			One of the simplest approximation is the Laplace approximation. The objective is to approximate an unknown distribution with a Gaussian one.\\
+			It does not seem a very good method as most of the distribution that can be encountered are not gaussian, but most of the time a gaussian is a good approximation in the domain of work. That said, the Laplace approximation will give you the best Gaussiann even if the true distribution has a completely different shape.
+
+			The idea is to use the Taylor expension of the negative log of the distribution arround the MAP estimate (named $x^*$).
+
+			We write $p(x) \propto \exp (-E(x)) = \tilde{p}(x)$ 
+			then, we have $-\log(\tilde{p}) \simeq E(x^*) + \frac{1}{2}(x-x^*)\T H(x^*)(x-x^*)$ (because Jacobian is 0 as $x^*$ is a stationnary mode.) which lead to the following $\tilde{p}(x) \simeq \exp (-E(x^*)) \exp (- \frac{1}{2}(x-x^*)\T H(x^*)(x-x^*) \propto \mathcal{N}(x| x^*, H^{-1} )= q(x)$
 % chapter regression (end)
