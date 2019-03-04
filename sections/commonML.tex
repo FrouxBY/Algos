@@ -5,7 +5,9 @@ This chapter is dedicated to the most common ML algorithms, a major part of the 
 
 It is intended to introduce different concept used in most Machine Learning Algorithms before moving to more specific algorithms.
 
+\section{What is Machine Learning ?}
 
+\todo{Add short intro that explain the goal, the process, etc of Machine Learning}
 \section{Graphical Model for Probabilistic Inference}
 
 Based on the Probabilistic Inference Course of Marc Deisenroth (Imperial College)
@@ -110,10 +112,18 @@ Based on the Probabilistic Inference Course of Marc Deisenroth (Imperial College
 
 	To find the desired parameters that maximize the likelihood, we typically do gradient ascent (or gradient descent on the negative likelihood). For numerical reasons, we apply the log-transformation to the probleme and minimize the negative log-likelihood. 
 
-	\subsubsection*{Closed-Form Solution}
+		\paragraph*{Closed-Form Solution - Linear Regression}
 
 			In some cases, a closed-form solution exist, which make computation easy (but not necesseraly cheap)
-	\subsubsection{Maximum A Posteriori Estimation (MAP)}
+
+		\paragraph*{MLE with Features}
+
+	\subsection{Overfitting}
+
+	\subsection{Regularization}
+	\subsection{Maximum A Posteriori Estimation (MAP)}
+
+		\paragraph*{MAP for Linear Regression}
 
 \section{Gradient Descent}
 
@@ -128,6 +138,11 @@ Based on the Probabilistic Inference Course of Marc Deisenroth (Imperial College
 
 	\subsection{Cross-Validation}
 
+	\subsection{Bayesian Model Selection}
+		\paragraph*{Bayes Factor}
+
+		\paragraph*{Fully Basyesian Treatment}
+
 	\subsection{Marginal Likelihood}
 
 \section{Bayesian Linear Regression}
@@ -135,5 +150,21 @@ Based on the Probabilistic Inference Course of Marc Deisenroth (Imperial College
 	\subsection{Mean and Variance}
 
 	\subsection{Sample function}
+
+\section{Features Extraction}
+	\todo{Simply explain and redirect to relevant chapter (dim reduc, computer vision, ...)}
+
+\section{Support Vector Machine}
+
+	\subsection{Linear Separating Hyperplane}
+
+		\paragraph*{Lagrangian duality}
+		\paragraph*{Karush-Kuhn-Tucker Condition for Optimality}
+	\subsection{SVM dual problem}
+
+	\subsection{Support Vector Regression}
+
+
+
 
 
