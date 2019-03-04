@@ -11,6 +11,10 @@
 		\todo[inline]{Add image with where Deep Learning is relative to ML}
 
 
+	\subsection{Supervised vs Unsupervised Learning}
+		Supervised : Learn to map $x \rightarrow y$ with $y$ labels. Ex : Classification, regression, object detection, semantic segmentation, image captionning, etc.
+		Unsupervised : Inferring a function that describes the hidden structured of unlabelled data. EX : Density Estimation (for continuous probability), Clustering, Feature Learning/Representation Learning (as Embedding vectors), Dimensionality Reduction, etc.
+
 \section{Optimisation : Gradient Descent}
 	\subsection{Stochastic GD versus Mini-Batch}
 
@@ -142,5 +146,16 @@
 
 	See Imaging chapter first
 
+\section{Generative Models}
+
+	Generative models are generally in the unsupervised learning category, as their objectif is to find a model such as $p_{model}(x) \simeq p_{data}(x)$.
+
+	Then, with a random noise $z$ as input of our model, which is equivalent to sample from the model distribution, we can generate new data which are similar to the original data. 
+	
+	\subsection{Sampling from PCA}
+		PCA is a dimensionality reduction algorithm (see eponymous chapter), therefore for a given data distribution we reduce the dimension of features. In the reducted space, approximating the distribution is easier, and using the reverse PCA after sampling from the reducted distribution approximation can draw sample from an approximation of the distribution in the original space. 
+
 
 % chapter deep_learning (end)
+
+
