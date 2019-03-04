@@ -38,26 +38,104 @@
 
 	\section{How to represent word}
 
-		\subsection{Bag of Word}
+		\paragraph{Bag of Word}
+			Count the number of word of in a sentence, this gives us a One Hot Vector (can be normalized as a frequency vector) as input.\\
+			Problem : 
+			\begin{itemize}
+				\item Very Sparse (if each word of the dictionnary is a dimension, this make more than 170 000 dimension for english)
+				\item This does not give any intel about the relationship of words - of common subject (e.g. Cat and kitten) or as grammar (subject, verb, etc.)
+			\end{itemize}
+		\paragraph{Mapping with concept}
+			Use logical concept to classify words : \\
+			-> Cat and kitten are feline mammal \\
+			-> Mouse and rat are rodent mammal\\
+			The WordNet (https://en.wikipedia.org/wiki/WordNet) synset (dictionnary of synonymes and themes) group words in such a way and is a reference for AI and ML application and research.
+			Problem :
+			\begin{itemize}
+				\item Misses Nuances between words as concept are based on similiraty and not on differences.
+				\item Misses new meanings, languages evolutions, etc. 
+				\item Classify word as concept without those issues is a problem in itself called Word Sense Disambiguation (WSD).
+				\item Ressources does not exist for most languages or even for specialised vocabulary (Medical, any technical subject).
+			\end{itemize}
 
-		\subsection{Mapping with concept}
 
-		\subsection{Features extraction}
+		\paragraph{Features extraction}
+			An other solution is to exctract only features from words. Those have to be designed depending on the application, but this can be powerful and efficient. For exemple counting the \% of positive and negative words for sentiment analysis. 
+			Problem : 
+			\begin{itemize}
+				\item Require domain knowledge
+				\item The feature are really task-specific and the extraction can be difficult.
+			\end{itemize}
+		\paragraph{Corpora and distributional hypothesis}
+			All those representations forget (partially or totally) a significant aspect of Natural Language, the context. A way to explain and describe context is to say that a word meaning is given by the words arround it, then the precise meaning of a word can be 'capture' in the word itself plus probability of surrounding word beeing in a specific corpora. \\
+			With a Fixed size of window context and a many corpora with different context available this is computable. \\
+			The use of probabilities and frequencies help us to move from discrete to continous representations, which makes possible to use a wider variety of model, which achieve generally better results. 
 
-		\subsection{Vector space model}
+			This way (Describe by Firth in 1957) gives some explanations for why further methods work.
+
+			It can be done with different manner, for example with Co-occurence matrix. This are also One Hot vector, but here each word is a vector and not each sentences. Different meaning of the same word can be encoded as different vector, it is easy to remove stop words (common word use in natural languages, but with a low ammount of meaning), Terms can be weighted by TF-IDF (term frequency–inverse document frequency) and some notion of similarity ca be incorporated (distance between vector for example). All of this tend to escape the discrete representation, however this is still very large space and therefore very sparse representations.
+		\paragraph*{Vector Space models}
+
+			In order to use known models, we want to represent words as vector in mathematical space. We embed words in a continuous vector space where semantically similar words are mapped to nearby points. The previous description (based on Co-Occurence matrix and diverse weighting) is not enough, but the use of Dimension reduction can help us to get more dense representation. For example the use of SVD (Singular Value Decomposition) can easily reduce the dimension of 170 000 words to 1 000 dimensions. \\
+			Problems:
+			\begin{itemize}
+				\item SVD is computationnally expensive ($O(mn^2)$)
+				\item Incorporating new word require to re-compute the SVD
+			\end{itemize}
+
+			The idea to solve those two problems have been found in representation learning, and their efficiency are the explanation of most of the progress in NLP in the recent years. 
 
 	\section{Learning word representation}
 
-		\subsection{Word embeddings : word2vec}
-			\paragraph*{Continous Bag-of-Words model}
+		The solution to most of the word representation problems is the learning of those representations. This work as many machine learning problem, the model test how well it performs on a task and the error is used to enhance the representation. \\
+		Here the task is the prediction of context words in context. For a given word as input the model gives a predicted context (words) as output, the score is given by a distance between words (using corpora as training set). Of course each word are vector. This is both computationnaly efficient (compared to SVD) and scalable with the corpus size (to some extent).\\
+		All deep learning Idea can then be applied here, with more or less efficiency.
 
+		\subsection{Word embeddings : word2vec}
+
+			The most known word embeddings model (which have been a revolution in the NLP field) is word2vec (by Mikolov et al., 2013). Those papers \todo{Add ref to Mikolov papers} introduce two different models :
+			\begin{itemize}
+				\item Continous Bag-of-Words model (CBOW):\\
+				- The objective is to predict a target word $w_t$ given context words $w_{t-j}, ..., w_{t-1}, w_{t+1}, ..., w_{t+j}$.
+				\item Skip-Gram model:\\
+				- The objective is to predicts context words  $w_{t-j}, ..., w_{t-1}, w_{t+1}, ..., w_{t+j}$ given a target word $w_t$.
+			\end{itemize}
+  
 		\subsection*{Skip-gram model}
 
-			\paragraph{Word embedding layer}
+			The Goal of the Skip-Gram model is to find word representations that are usefuk for predicting context word ($w_{t+j}$) given a word $w_t$. For this we maximise the following equation : 
+			\[
+				\frac{1}{T}\sum^T_t=1 \sum_{-c\leq j\leq c}\log p(w_{t+j} | w_t, \theta)
+			\]
+			which is the average log probabilities for context window $c$ given the parameters $\theta$. $T$ is the size of the corpus.\\
+			The probability can be defined using the softmax function : 
+			\[
+				p(w_O |  w_I) = \frac{\exp(v_{w_O}\T v_{w_I})}{\sum_{w\in W}\exp(v_{w}\T v_{w_I})}
+			\]
+			where $v_w$ are the embedding vector of the word $w$
+
+			\paragraph*{Neural Net implementation}
+
+			The neural network for the Skip gram model is simple, the input vectors are one-hot vector of the size of the language (Ex: 10 000), then there is a hidden layer of significantly fewer dimension (Ex: 300), which are fully connected to an output layer of the size of the language (here 10 000) with a softmax activation. Each dimension $i$of the output learn the probability of having the word $w_i$ as a context word for the input $w_I$. After learning, we can remove the output layer, and getting the embedding of the words as the output of the previous layer. This can be seen a little bit as encoder neural net for computer vision, with encoder and decoder part. 
+
+			As a result, the hidden layer is a embedding matrix, working as a look-up table. 
+
+			The training can be done with Gradient Descent and Neural net algorithm for learning. How ever, there are a lot of parameters in naive Skip-Gram (size of corpus time embedding dimension) which are prohibitively expensive for large dataset.
 
 			\paragraph*{Negative Sampling}
+				However there is no need for a full probabilistic model and some trick can help to reduce the computation. A binary classification objectif can be used for training the model, using logistic regression to discriminate real target words from other noise words. This is called Negative Sampling, which can be written as maximising : 
+				\[
+					\log Q_\theta (D=1| w_t, c) + k \mathbb{E}_{w_\sim P_{noise}}[log Q_\theta(D=0 | w, c)]
+				\]
+				Where the first term is the binary logistic regression probability of seeing the word $w_t$ in the context $c$ in the dataset $D$, calculated in terms of the learned embedding vectors. The expectation is approximated bu using $k$ contrastive words from a noise distribution.
+
+				As for intuition, this can be seen as the following : \\
+				- To predict a word Context from a word Input, first select k noisy (i.e. contrastive) words which are not in the context of the word Input and then compute the loss for observed and contrastive pairs. at a step $t$, the objective is $ \log Q_\theta(D=1 | Context, Input) + \log Q_\theta(D=0 | Noise_k, Input)$
+
+				How to select the Negative Sampling ? The probability for selecting a word need to be related to its frequency. The number of sample required need to be larger for small dataset and smaller for large datasets. Arround 5-20 words against 2-5 words for larger dataset. 
 
 			\paragraph*{Exemple of vector representation}
+				Add explanation about what vector capture (king, queen, man, woman exemple)
 		
 			\paragraph*{Other tricks}
 				\begin{itemize}
@@ -67,13 +145,8 @@
 				\end{itemize}
 
 			\paragraph*{Other kind of embeddings word}
-				\begin{itemize}
-					\item Continuous Bag of Words (CBOW)
-					\item Global Vectors for Word Representation (Glove)
-					\item Contextualised word embeddinfs (ELMo and BERT 2018)
-				\end{itemize}
-
-			Contecuatlised word embeddings seems really powerful, but really costly
+				CBOW, Glove, ELMo and BERT
+			Contextualised word embeddings seems really powerful, but really costly
 
 
 	\section{Some Algorithm for NLP}
@@ -128,18 +201,44 @@
 			\subsubsection*{Character-Level Approach}
 
 		\subsection{Recurrent Neural Networks (RNN)}
-
+			Use the sequence structure of language. Very efficient but none paralelizable. 
 		\section{Preprocessing in NLP}
-
+			Require consistency, truecase (instead of lowercase), removal of stopwords (espacially important for smaller datasets)
 		\section{Evaluation of NLP model}
-
+			3 different possible evaluations :
+			\begin{itemize}
+				\item Precision : $\frac{TP}{TP+FP}$
+				\item Recall : $\frac{TP}{TP+FN}$
+				\item Accuracy $\frac{TP+TN}{TP+FP+TN+FN}$
+				\item F-Mesure: $F = k \times \frac{precision \times recall}{precision + recall}$
+			\end{itemize}
+			With TP = True positives, FP = False positives, TN = True negatives, FN= False negatives
 
 		\section{Language Model}
+			Language model task = LM's tasks.
+			Language models that assign a probability to each possible next word given a history of words. This can be generalised for entire sentences or operate at character level (or any symbol)
 
 			\subsection{Basic N-gram language models}
+				A N-grams in simply a sequence of $n$ words, the LM's task here is to evaluate $P(w|h)$ where $w$ is next word and $h$ the history. P can then be estimated from frequency counts, but require large corpus.\\
+				Longer history or even for full sentences require very large corpus, and is not feasible for long sentences.\\
+				However, we can decompose the n-gram as n different word. This is translate in term of probablility by $P(h) = P(w_1 ... w_n) = P(w_1)P(w_2 | w_1)...P(w_n | w_1 ... w_{n-1})$ using a conditional chain rule. This help us to see this as Markov Chain, and making Markov Assumption : \\
+				\[
+					P(w_n | w_1^{n-1}) \simeq P(w_n | w_{n-N+1}^{n-1})
+				\]
+				where $w_1^{n-1} = w_1 ... w_{n-1}$. This mean that for a n-gram, the next word probability depend only the last $N$ few words (or are approximate so).
 
+				\begin{itemize}
+					\item MLE as relative frequencies
+					\item Corpus Size
+					\item Technicalities
+					\item Use log space
+					\item How to decide on n (of the n-gram)
+					\item Google exemple ressource
+				\end{itemize}
 			\subsection{Evaluation of language models}
-
+				- Does it prefer real sentences to ungrammatical ones ?\\
+				- Measure the perplexity of an unseen corpus.\\
+				- Perplexity it the inverse probability of the test set. 
 			\subsection{Sparsity}
 
 		\section{Structured prediction}
