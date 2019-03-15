@@ -2,10 +2,11 @@
 \chapter{NLP} % (fold)
 \label{cha:nlp}
 		
-		Thanks to Lucia Specia Course at Imperial Collage and several ressources : \par
-		\url{https://github.com/nyu-dl/NLP_DL_Lecture_Note/blob/master/lecture_note.pdf} \par
-		\url{https://web.stanford.edu/~jurafsky/slp3/}
-		\section{What is NLP}
+	Thanks to Lucia Specia Course at Imperial Collage and several ressources : \par
+	\url{https://github.com/nyu-dl/NLP_DL_Lecture_Note/blob/master/lecture_note.pdf} \par
+	\url{https://web.stanford.edu/~jurafsky/slp3/}
+	
+	\section{What is NLP}
 
 			Natural language Processing (or Natural Language Understanding sometimes) is the field which try to make machine understand natural human language. Indeed we have developped really complex way of communication thanks to vocaculary, grammar, syntax and semanticDomain a the intersection between AI, Computer Sciences, Linguistics and Cognitive Science.
 
@@ -93,7 +94,7 @@
 			In order to avoid this paradox, the TF-IDF (Term frequency - Inverse document frequency) use the product of TF $= 1 + \log_{10} (count(t, d) $ (or 0) and the IDF $= \log_{10} \frac{N}{df_t}$ where $df_t$  is the number of document where $t$ occures and $N$ the number of all document. 
 
 			\[
-				\texx{tf-idf} = tf_{t,d} \time iff_t
+				\text{tf-idf} = tf_{t,d} \times iff_t
 			\]
 
 			The tf-idf is commonly use as a baseline for weighting a co-occurence Matrix.
@@ -194,18 +195,18 @@
 				  \end{itemize}  
 
 
-	\section{Some Algorithm for NLP}
+	\section{ML Algorithms for NLP}
 
 		NLP use classifier for different tasks, such as sentiment analysis, fake news, authorship  attribution, detection of suicide risk, patient risk assessment, etc.
 
 		\subsection{Naives Bayes Classifier}
 
-			Used a lot in anti-spam algorithm
+			This is the most simple classifier which work well in some NLP application, such as text categorization, it is used a lot in anti-spam algorithm for exemple. 
 
 			Work with a training corpus, use feature vector of word input $x = [x_1, ..., x_I]$
 			and we are looking for the output class $\hat y = \arg \max_y P(y|x) = \arg \max_y P(x | y)P(y)$
 
-			We assume in Naive Bayes that the features of $x$ are independant. Which makes possible to write : 
+			We assume in Naive Bayes that the features of $x$ are independant (in particular the order and the position in the text is not taken into account). Which makes possible to write : 
 			\[
 				\hat y = \arg \max_y P(y) \Pi_1^I P(x_i | y)
 			\]
@@ -214,20 +215,58 @@
 				P(y) = \frac{N_y}{N_x} \text{ and } P(x_i | y) = \frac{\text{count}(x_i, y)+1}{\Sigma_{x\in V}(\text{count(x, y)+1})}
 			\] with $V$ the vocabulary across classes
 
+			In order to ensure the hypothesis, usualy a simple Bag-of-Word representation is used.
+
 			\paragraph*{Problems}
 
 				\begin{itemize}
 					\item All featurees are equally important (this is not the case generally)
 					\item There is a strong conditonal independence assumption
 					\item The context is not taken into account
-					\item Unknown words are not tractable
+					\item The MLE training have problem to compute probabilities of word which never appear in some classes. The solution might be to add a Laplace Smoothing.
+					\item Unknown words are not tractable (Require to be ignored for predictions)
 				\end{itemize}
 
+			\begin{algorithm}[H]
+				\KwData{Corpus $D$ and Classes $C$ }
+				\KwResult{$\log P(C) and \log P(w|c)$}
+
+				
+					\ForAll{$c \in C$}
+					{
+						$N_{doc} =$ Number of document in $D$\\
+						$N_c = $ Number of document within $c$\\
+						logprior[c] $\leftarrow \log \frac{N_c}{N_{doc}}$\\
+						$V \leftarrow$ Vocabulary of $D$\\
+						bigdoc $\leftarrow$ append(d) for d in D with class c\\
+						\ForAll{$w \in V$}
+						{
+							count(w,c) $\leftarrow$ number of occurences of w in bigdoc[c]\\
+							loglikelihood[w, c] $\leftarrow \log \frac{count(w,c) +1}{\sum (count(w', c)+1)}$   
+						} 
+					}
+				return logprior, loglikelihood, V
+				
+				\caption{Naive Bayes Algorithm training with Laplace Smoothing}
+			\end{algorithm}
+
+
+			\subsection{Variant of Bayes Naive}
+				- Binary multinomial naive Bayes.\\
+				- Use of sentiment lexicons for unlabelled corpus (General Inquirer, LIWC, MPQA, etc.)
 		\subsection{Logistic Regression}
+
 			See Chapter Regression for details, basically we are adding weight to each features $x_i$ of $x$ \\
 			example : The Movie is Bad $\rightarrow$ Bad might be more important than movie in sentiment analysis.
 
-			\paragraph*{Problems}
+			The logistic Regression is particularly suitable for discovering link between features and some outcome. This is an other baseline for classification tasks. 
+
+			\paragraph*{Difference with Naive Bayes and advantages}
+			The main difference with naive Bayes is that Logistic Regression is a discriminative classifier instead of a Generative Classifier.
+
+			The strong independance assumption of naive Bayes implies that strong correlatio will artificially augment the importance of some features (imagine what happen if you duplicate one feature). Logistic Regression is much more robust to correlated features and will be the preffered task for larger documents and datasets.
+
+			However, on very small datasets or short document Naive Bayes work extremely well and is much more faster to implement (there is no optimization step).
 				
 		\subsection{Neurals Networks}
 			See DeepLearning for details of what is a neural networks. \\
@@ -236,7 +275,11 @@
 
 			NN are used because of the automatic learning of features which are hard to describe humanly (because of grammar, semantics, etc) and the non-linearity, their flexibility to fit highly complex data. 
 
-			But their require lot of data for training. 
+			We talk about Neural Language Models for model which use neural nets to compute the probability of the next word given n previous word
+
+			Neural Language model can use pre-trained word embeddings, making possible to get dense embedding even with small corpus, and to learn faster.
+
+			However Neural Nets require usually lot of data for training correctly (with overfitting, etc). 
 
 
 		\subsection{CNNs in NLP}
@@ -246,10 +289,14 @@
 			\subsubsection*{Character-Level Approach}
 
 		\subsection{Recurrent Neural Networks (RNN)}
+			
 			Use the sequence structure of language. Very efficient but none paralelizable. 
-		\section{Preprocessing in NLP}
+
+	\section{Preprocessing in NLP}
+
 			Require consistency, truecase (instead of lowercase), removal of stopwords (espacially important for smaller datasets)
-		\section{Evaluation of NLP model}
+
+	\section{Evaluation of NLP model}
 			3 different possible evaluations :
 			\begin{itemize}
 				\item Precision : $\frac{TP}{TP+FP}$
@@ -259,11 +306,12 @@
 			\end{itemize}
 			With TP = True positives, FP = False positives, TN = True negatives, FN= False negatives
 
-		\section{Language Model}
-			Language model task = LM's tasks.
-			Language models that assign a probability to each possible next word given a history of words. This can be generalised for entire sentences or operate at character level (or any symbol)
+	\section{Language Model}
 
-			\subsection{Basic N-gram language models}
+		Language model task = LM's tasks.
+		Language models that assign a probability to each possible next word given a history of words. This can be generalised for entire sentences or operate at character level (or any symbol)
+		\subsection{Basic N-gram language models}
+
 				A N-grams in simply a sequence of $n$ words, the LM's task here is to evaluate $P(w|h)$ where $w$ is next word and $h$ the history. P can then be estimated from frequency counts, but require large corpus.\\
 				Longer history or even for full sentences require very large corpus, and is not feasible for long sentences.\\
 				However, we can decompose the n-gram as n different word. This is translate in term of probablility by $P(h) = P(w_1 ... w_n) = P(w_1)P(w_2 | w_1)...P(w_n | w_1 ... w_{n-1})$ using a conditional chain rule. This help us to see this as Markov Chain, and making Markov Assumption : \\
@@ -280,15 +328,17 @@
 					\item How to decide on n (of the n-gram)
 					\item Google exemple ressource
 				\end{itemize}
-			\subsection{Evaluation of language models}
+		\subsection{Evaluation of language models}
+
 				- Does it prefer real sentences to ungrammatical ones ?\\
 				- Measure the perplexity of an unseen corpus.\\
 				- Perplexity it the inverse probability of the test set. 
-			\subsection{Sparsity}
 
-		\section{Structured prediction}
+		\subsection{Sparsity}
 
-			\subsection{Part-Of-Speech tagging (POS)}
+	\section{Structured prediction}
+
+		\subsection{Part-Of-Speech tagging (POS)}
 
 				\paragraph*{Why do we need POS tagging}
 
@@ -298,13 +348,13 @@
 
 
 				\paragraph*{POS ambiguities}
-			\subsection{Probabilistic POS tagging}
+		\subsection{Probabilistic POS tagging}
 
-			\subsection{Hidden Markov Model (HMM) tagger}
+		\subsection{Hidden Markov Model (HMM) tagger}
 
-			\subsection{Maximum Entropy Markov Model (MEMM) for POS tagging}
+		\subsection{Maximum Entropy Markov Model (MEMM) for POS tagging}
 
-			\subsection{Other approachs}
+		\subsection{Other approachs}
 				CRF
 
 			\paragraph*{Performance}
@@ -313,22 +363,22 @@
 			\paragraph*{Tools}
 				Spacy, NLTK
 
-		\section{Sequence Models}
+	\section{Sequence Models}
 
-			\paragraph*{Sequence Tagging}
+		\paragraph*{Sequence Tagging}
 
-			\subsection{Types of Sequence Models}
+		\subsection{Types of Sequence Models}
 
-			\subsection{Neural Sequence Modelling}
+		\subsection{Neural Sequence Modelling}
 
 				\paragraph*{Non-Markovian Assumption}
 
-			\subsection{Language Modelling with Recursion}
+		\subsection{Language Modelling with Recursion}
 
-		\section{Recurrent Neural Network}
-			\subsection{Structure of LM}
+	\section{Recurrent Neural Network}
+		\subsection{Structure of LM}
 
-			\subsection{Training of RNNLM}
+		\subsection{Training of RNNLM}
 
 				\paragraph*{Effective Back-Prop Strategies}
 
@@ -337,15 +387,15 @@
 
 				\paragraph*{Vanishing Gradient}
 
-			\subsection{Gated Recurrent Neural Network}
+		\subsection{Gated Recurrent Neural Network}
 
-			\subsection{Other Variant}
+		\subsection{Other Variant}
 
 				- Long Short-Term Memory networks (LSTM)
 				- Similar functions
-		\section{Bi-directional RNN}
+	\section{Bi-directional RNN}
 
-		\section{Transformer Based Models}
+	\section{Transformer Based Models}
 
 
 
