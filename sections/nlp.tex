@@ -38,6 +38,14 @@
 
 	\section{How to represent word}
 
+		In order to use maths to infer anything on word, the first questions that raised is "How to represent words in a mathematical way ?". This can be rephrased as a question about encoding the meaning of a word. The definitions of the meaning of a word have been studied for a long time by philosophy and linguistic, and this can inspire maths a lot. 
+
+		The notions of lexical semantics (meaning of a word) cover those following subjects :  Lemma and Senses, Relationship between words or senses (Propositionnal meaning, Principle of Contrast, Antonyms/reversive), Word similarity and Word relatedness (Co-participating in shared events), Taxonomic relations.
+
+		Thanks to this notion, we have a better insight of the meaning of words, however, this does not come with any computational model. The current best models are \emph{Vector semantics} models.
+
+		The following paragraphs show different methods or general concept to encode words (on a sentence level or word level). Usually the objective is to find a vector representation of the entities we want to describe.
+
 		\paragraph{Bag of Word}
 			Count the number of word of in a sentence, this gives us a One Hot Vector (can be normalized as a frequency vector) as input.\\
 			Problem : 
@@ -45,6 +53,7 @@
 				\item Very Sparse (if each word of the dictionnary is a dimension, this make more than 170 000 dimension for english)
 				\item This does not give any intel about the relationship of words - of common subject (e.g. Cat and kitten) or as grammar (subject, verb, etc.)
 			\end{itemize}
+
 		\paragraph{Mapping with concept}
 			Use logical concept to classify words : \\
 			-> Cat and kitten are feline mammal \\
@@ -60,30 +69,45 @@
 
 
 		\paragraph{Features extraction}
-			An other solution is to exctract only features from words. Those have to be designed depending on the application, but this can be powerful and efficient. For exemple counting the \% of positive and negative words for sentiment analysis. 
+			An other solution is to extract only some features from words. Those may have to be designed depending on the application (for better accuracy), but this can be powerful and efficient. For exemple counting the \% of positive and negative words for sentiment analysis. 
 			Problem : 
 			\begin{itemize}
 				\item Require domain knowledge
 				\item The feature are really task-specific and the extraction can be difficult.
 			\end{itemize}
+
 		\paragraph{Corpora and distributional hypothesis}
 			All those representations forget (partially or totally) a significant aspect of Natural Language, the context. A way to explain and describe context is to say that a word meaning is given by the words arround it, then the precise meaning of a word can be 'capture' in the word itself plus probability of surrounding word beeing in a specific corpora. \\
+
 			With a Fixed size of window context and a many corpora with different context available this is computable. \\
 			The use of probabilities and frequencies help us to move from discrete to continous representations, which makes possible to use a wider variety of model, which achieve generally better results. 
 
 			This way (Describe by Firth in 1957) gives some explanations for why further methods work.
 
 			It can be done with different manner, for example with Co-occurence matrix. This are also One Hot vector, but here each word is a vector and not each sentences. Different meaning of the same word can be encoded as different vector, it is easy to remove stop words (common word use in natural languages, but with a low ammount of meaning), Terms can be weighted by TF-IDF (term frequency–inverse document frequency) and some notion of similarity ca be incorporated (distance between vector for example). All of this tend to escape the discrete representation, however this is still very large space and therefore very sparse representations.
+
+		\paragraph*{TF-IDF : Weighing terms in the vector}
+
+			Co-occurence matrix take the raw frequency of co-occurent words, but this is not the best measure of association between words. The raw frequency is not enough discriminative as a lot of really frequent word but meaningless can be shared by two words.
+
+			In order to avoid this paradox, the TF-IDF (Term frequency - Inverse document frequency) use the product of TF $= 1 + \log_{10} (count(t, d) $ (or 0) and the IDF $= \log_{10} \frac{N}{df_t}$ where $df_t$  is the number of document where $t$ occures and $N$ the number of all document. 
+
+			\[
+				\texx{tf-idf} = tf_{t,d} \time iff_t
+			\]
+
+			The tf-idf is commonly use as a baseline for weighting a co-occurence Matrix.
 		\paragraph*{Vector Space models}
 
-			In order to use known models, we want to represent words as vector in mathematical space. We embed words in a continuous vector space where semantically similar words are mapped to nearby points. The previous description (based on Co-Occurence matrix and diverse weighting) is not enough, but the use of Dimension reduction can help us to get more dense representation. For example the use of SVD (Singular Value Decomposition) can easily reduce the dimension of 170 000 words to 1 000 dimensions. \\
+			In order to use known Inference/Machine Learning models, we want to represent words as vector in mathematical space. We embed words in a continuous vector space where semantically similar words are mapped to nearby points. The previous description (based on Co-Occurence matrix and diverse weighting) is not enough, but the use of Dimension reduction can help us to get more dense representation. For example the use of SVD (Singular Value Decomposition) can easily reduce the dimension of 170 000 words to 1 000 dimensions. \\
 			Problems:
 			\begin{itemize}
 				\item SVD is computationnally expensive ($O(mn^2)$)
 				\item Incorporating new word require to re-compute the SVD
 			\end{itemize}
 
-			The idea to solve those two problems have been found in representation learning, and their efficiency are the explanation of most of the progress in NLP in the recent years. 
+			The idea to solve those two problems have been found in representation learning, and their efficiency are the explanation of most of the progress in NLP in the recent years.
+
 
 	\section{Learning word representation}
 
@@ -93,19 +117,21 @@
 
 		\subsection{Word embeddings : word2vec}
 
-			The most known word embeddings model (which have been a revolution in the NLP field) is word2vec (by Mikolov et al., 2013). Those papers \todo{Add ref to Mikolov papers} introduce two different models :
+			The most known word embeddings modelx (which have been a revolution in the NLP field) are word2vec (by Mikolov et al., 2013). Those papers \todo{Add ref to Mikolov papers} introduce two different models :
 			\begin{itemize}
 				\item Continous Bag-of-Words model (CBOW):\\
 				- The objective is to predict a target word $w_t$ given context words $w_{t-j}, ..., w_{t-1}, w_{t+1}, ..., w_{t+j}$.
 				\item Skip-Gram model:\\
 				- The objective is to predicts context words  $w_{t-j}, ..., w_{t-1}, w_{t+1}, ..., w_{t+j}$ given a target word $w_t$.
 			\end{itemize}
+
+			But actually we are not really interested in the prediction made by the algorithms, but only in the weights of the models, which give us a dense representation of the words. Therefore it can be rephrased as a classification problem : given two words, how likely they can occure together. This can be done with simple Logistic Regression classifier, and the weight of the logistic regression will be  the embedding matrix. 
   
 		\subsection*{Skip-gram model}
 
-			The Goal of the Skip-Gram model is to find word representations that are usefuk for predicting context word ($w_{t+j}$) given a word $w_t$. For this we maximise the following equation : 
+			The Goal of the Skip-Gram model is to find word representations that are useful for predicting context word ($w_{t+j}$) given a word $w_t$. For this we maximise the following equation : 
 			\[
-				\frac{1}{T}\sum^T_t=1 \sum_{-c\leq j\leq c}\log p(w_{t+j} | w_t, \theta)
+				\frac{1}{T}\sum^T_{t=1} \sum_{-c\leq j\leq c}\log p(w_{t+j} | w_t, \theta)
 			\]
 			which is the average log probabilities for context window $c$ given the parameters $\theta$. $T$ is the size of the corpus.\\
 			The probability can be defined using the softmax function : 
@@ -113,6 +139,10 @@
 				p(w_O |  w_I) = \frac{\exp(v_{w_O}\T v_{w_I})}{\sum_{w\in W}\exp(v_{w}\T v_{w_I})}
 			\]
 			where $v_w$ are the embedding vector of the word $w$
+
+			\begin{itemize}
+				\item 1. Treat the 
+			\end{itemize}
 
 			\paragraph*{Neural Net implementation}
 
@@ -147,6 +177,21 @@
 			\paragraph*{Other kind of embeddings word}
 				CBOW, Glove, ELMo and BERT
 			Contextualised word embeddings seems really powerful, but really costly
+
+			\subsection{Discussion on Embedddings}
+
+				\paragraph*{Bias and Embeddings}
+					One of the problem with embeddings is that the learning process relies on a dataset (the corpus) which is by nature imperfect and biaised. One Exemple is the gender biais : As the corpus contains data about job, it may decide that man and woman have different similarity for job and reproduce that nurse is associated with women and doctor to man as this is the bias of the corpus (Bolukbasi et al. 2016).
+
+				\paragraph*{Evaluating Vector Models}
+				\begin{itemize}
+				  	\item Test performance on similarity
+				  	\item WordSim-353
+				  	\item SimLex-999
+				  	\item Toefl Dataset
+				  	\item Stanford Contextual Word Similarity (SWCS)
+				  	\item Analogy task
+				  \end{itemize}  
 
 
 	\section{Some Algorithm for NLP}
