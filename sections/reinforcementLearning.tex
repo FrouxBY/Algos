@@ -321,7 +321,7 @@
 				Return $Q$ and $\pi$ the derived policy
 				\caption{SARSA algorithm with $\epsilon$-greedy policy}
 			\end{algorithm}
-
+			
 			\begin{theorem}
 				\textbf{Convergence of Sarsa} \\
 				$Q(s, a) \rightarrow Q^\infty(s,a)$ under :
@@ -330,9 +330,12 @@
 					\item Robbins-Monroe sequence of step-sizes $\alpha_t$ : which imply $\sum \alpha_t$ diverge and $\sum \alpha_t^2$ converge.
 				\end{itemize}
 			\end{theorem}
-			\remark{the $\epsilon$-greedy policy can be replaced by any policy derived from Q. (Because Q is the one updated by the algorithm)}
+			
 
+			\emph{Remarque :} the $\epsilon$-greedy policy can be replaced by any policy derived from Q. (Because Q is the one updated by the algorithm)
+			
 			\subparagraph*{SARSA-Lambda}
+			
 			\subparagraph*{Hindsight Experience Replay}
 
 		\paragraph*{Q-Learning: Off-Policy Temporal Difference Learning}
@@ -391,7 +394,7 @@
 	% subsection clipping_of_rewards (end)
 	\subsection{Skipping of Frames} % (fold)
 	\label{sub:skipping_of_frames}
-	
+	 
 	% subsection skipping_of_frames (end)
 % section deep_learning_reinforcement_learning (end)
 % chapter reinforcement_learning (end)
