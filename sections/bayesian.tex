@@ -9,10 +9,8 @@
 		This section is made with a great inspiration from the Probabilistic Inference from Marc Deisenroth (Imperial College London)
 		\subsection{Problem setting} % (fold)
 		\label{sub:problem_setting}
-			For a set of observation $y_i = f(x_i) + \epsilon$ with $\epsilon \sim \mathcal{N}(0, \sigma_\epsilon^2$, we want to fine a distribution over \emph{functions} $p(f)$ that explains the data. It's not exactly the same as a linear regression problem because we do not look for only one function.
-
-			This is a really power full process used in a lot of different problematic thanks to its robustness and known properties (in comparison to deep learning methods).
-
+			For a set of observations $y_i = f(x_i) + \epsilon$ with $\epsilon \sim \mathcal{N}(0, \sigma_\epsilon^2)$, we want to fine a distribution over \emph{functions} $p(f)$ that explains the data. It's not exactly the same as a linear regression problem because we do not look for only one function.\\
+			This powerfull methods is used in a lot of different problematic thanks to its robustness and known properties (in comparison to deep learning methods).
 			\begin{itemize}
 				\item Reinforcement Learning and Robotics
 				\item Bayesian optimization
@@ -22,7 +20,6 @@
 				\item High-energy physics
 				\item Medical application
 			\end{itemize}
-
 			Formally a Gaussian Process is a multivariate Gaussian distribution with infinite variables (countable or even uncountable).
 
 		% subsection problem_setting (end)
@@ -31,7 +28,7 @@
 			A Gaussian process is defined by a mean function $m(\dot)$ and a covariance function (=kernel) $k(\dot, \dot)$.
 
 			The mean function represents the average of all the function.\\
-			the Covariance function allows us to compute covariance between any two functions. Notes that the function are unknown, and only this correlations are fully known.
+			the Covariance function allows us to compute covariance between any two functions. Notes that the function are unknown, and only those correlations are fully known.
 			% subsection definition (end)
 
 		\subsection{Gaussian Process Inference} % (fold)
@@ -41,10 +38,10 @@
 			\[
 				p(f | X, y) = \frac{p(y | f, X)p(f)}{p(y | X)}
 			\]
-			Which gives us a Likelihood $p(y | f, X) = \mathcal{N}(f(X), \sigma^2 \mat I)$, a Marginal Likelihood $p(y | X) = \int p(y | f, X) p (f | X) df$ and a Posterior $p(f |y, X) = \textbf{GP}(m_{post}, k_{post})$
-
-			How can we manage to work with the distribution over function, and then infinite dimension for calculus, etc. ? This is possible because each time you consider only finite sample, computing the joint distribution boils down to work on finite-dimensional multivariate Gaussian distributions
-
+			Which gives us a Likelihood $p(y | f, X) = \mathcal{N}\left(f(X), \sigma^2 \mat I\right)$,\\
+			 a Marginal Likelihood $p(y | X) = \int p(y | f, X) p (f | X) df$ \\
+			 and a Posterior $p(f |y, X) = \textbf{GP}(m_{post}, k_{post})$\\
+			How can we manage to work with the distribution over function, and then infinite dimension for calculus, etc. ? This is possible because each time you consider only finite sample, computing the joint distribution boils down to work on finite-dimensional multivariate Gaussian distributions\\
 			Then we can use the gaussian properties (including gaussian prior as conjugate, ...) to make prediction : \\
 			(We define $X_*, f_*$, etc as the test data and predicted function)
 			\[
@@ -59,5 +56,94 @@
 
 			% subsection gaussian_process_inference (end)
 
-		\section{Bayesian Optimisation}
+		\subsection{Covariance function / Kernel of Gaussian Process}
+
+				A Gaussian process is fully specified by mean and kernel. The requirement for the kernel is to be symmetric and positive semi-definite. Therefore sum and product term by terms of Kernel are still valid kernel. This make possible to create various kind of kernel, encoding high-level structural assumptions about the functions, with combining a few known kernel. \\
+				The most common kernel are : 
+				\begin{itemize}
+					\item Gaussian Kernel : $k(x_i, x_j) = \sigma^2_f \exp\left(- \frac{(x_i -x_j)\T (x_i - x_j)}{l^2}\right) $
+					\item Matérn Kernel : $ k(x_i, x_j) = \sigma^2_f \left( 1 + \frac{\sqrt{3} \norm{x_i - x_j}}{l}\right) \exp \left( - \frac{\sqrt{3} \norm{x_i - x_j}}{l}\right)  $
+					\item Periodic Kernel : $k(x_i, x_j) =  \sigma^2_f  \exp \left( - \frac{2 \sin^2\left( \frac{\kappa(x_i -x_j)}{2 \pi}\right)}{l^2}\right) $ which is a gaussian with a conjugate periodic cosinus and sinus.
+				\end{itemize}
+
+		\subsection{Hyper-paramaters of a GP}
+
+				A GP possesses 3 kinds of hyper parameters:
+				\begin{itemize}
+					\item Mean function
+					\item Covariance
+					\item Likelihood parameters (such as noise variance)
+				\end{itemize}
+				Therefore this imply that hyper-parameters can be optimized and that model selection can be made. 
+
+				\paragraph*{Marginal likelihood and optimization}
+
+		\subsection{Model Selection}
+
+		\subsection{Limitation and tips}
+
+	\section{Bayesian Optimisation}
+
+		\subsection{Machine Learning Meta-Challenges}
+
+			- Models are more and more complicated (more parameters)\\
+			- Non Convex and stochastic optimization have hyper parameters hard to optimize (learning rates, momentum, ...)\\
+			- Ther
+
+		\subsection{Search for Good Hyper-parameters}
+
+			-Require objective function for evaluation (Generalization evaluation, cross-validation, ...)\\
+			- Standard search procedures:
+			\begin{itemize}
+				\item Manual Tuning : Costly and mostly ineficient
+				\item Grid Search : Costly but in fine works
+				\item Random search : Simple, and works surprisingly often well 
+				\item Black Magic : Take hyper parameters from other papers/ Researcher/similar problem.
+				\item Bayesian Optimization
+			\end{itemize}
+
+		\subsection{Description of Bayesian Optimization}
+
+			The objective is to optimize our model as a black box which is expensive to evaluate.For this a proxy model which is cheap to evaluate is build using the outcomes of experiments of the black box.\\
+			The proxy need to be cheap to evaluate and therefore cheap to optimize.\\
+			The standard proxy is of course a Gaussian Process.
+
+			Key-step :
+			\begin{itemize}
+				\item Approximate the model  with a proxy function
+				\item Find global optimum of the proxy (we can guarranty that this is global and not only local thanks to the properties of the proxy).
+				\item Evalute the true model at this optimum
+				\item use the new value to get a better proxy model and restart until satisfied.
+			\end{itemize}
+
+			\todo{Add link to detailed explanation}
+
+		\subsection{Use Uncertainty in global Optimization}
+
+			The previous pseudo-algorithm are very focused on the global optimum of the mean function of the Gaussian Process. Howerver we need to take into account the Variance if we want to explore the parameters space. Let's imagine a GP with only one datapoint as training set, with value lesser than the mean value of the GP prior. Then the algorithm is stuck at this point and never explore.\\
+			That's why using high variance is interresting, with the followong trade-off:
+			\begin{itemize}
+				\item Exploration : Seek places with high variance/uncertainty
+				\item Exploitation : Seek places with low mean
+			\end{itemize}
+
+			\todo{Write BO as a proper algorithm}
+
+			\paragraph*{Probability of Improvement}
+
+				The idea is to determine the point with the higher probability of improvement (in term of min value of the black-box).
+
+			\paragraph*{slack variable}
+				Avoir continous exploration arround a best value, and force more exploration
+
+			\paragraph*{Expected Improvement}
+				Here we use the expectation of the improvement instead of probability, this tend to have a better exploration.
+
+			\paragraph*{GP-lower confidence Bound}
+
+				We can simply use the lower confidence bound as the function for next point location, using a factor between mean and variance for the trade-off between Exploration and Exploitation.
+
+		\subsection{Limitation}
+			- Problem of function model for proxy (Kernel choice).\\
+			- Limited Scalibility : Curse of dimensionnality
 % chapter bayesian_algorithms (end)
