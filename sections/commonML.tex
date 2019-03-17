@@ -7,7 +7,7 @@ It is intended to introduce different concept used in most Machine Learning Algo
 
 \section{What is Machine Learning ?}
 
-\todo{Add short intro that explain the goal, the process, etc of Machine Learning}
+	\todo{Add short intro that explain the goal, the process, etc of Machine Learning}
 \section{Graphical Model for Probabilistic Inference}
 
 Based on the Probabilistic Inference Course of Marc Deisenroth (Imperial College)
@@ -28,9 +28,9 @@ Based on the Probabilistic Inference Course of Marc Deisenroth (Imperial College
 			\item Compute some inference and learning as graphical manipulations
 		\end{itemize}
 
-		There exists 3 kinds of model : Bayesian networks (directed graphical models), Markov random fields (undirected graphical models) and factor graphs (with nodes which are not random variables)/
+		There exists 3 kinds of model : Bayesian networks (directed graphical models), Markov random fields (undirected graphical models) and factor graphs (with nodes which are not random variables)
 
-		\subsubsection{Bayesian Networks}
+			\paragraph*{Bayesian Networks}
 
 			\todo[inline]{add basic graphs exemple}
 
@@ -44,9 +44,9 @@ Based on the Probabilistic Inference Course of Marc Deisenroth (Imperial College
 
 			\todo[inline]{add graphicals model of linear regression}
 
-			\paragraph*{D-Separation:} A set A of nodes is d-Separated (conditionnaly independant) from B by C iff all path between A and B are blocked. C is tht set of observed variables in the graphical model.
+			\paragraph*{D-Separation:} A set A of nodes is d-Separated (conditionnaly independant) from B by C iff all path between A and B are blocked. C is the set of observed variables in the graphical model.
 			\begin{definition}
-				A Path is \emph{Blocked} id it includes a node such that either :
+				A Path is \emph{Blocked} if it includes a node such that either :
 				\begin{itemize}
 					\item The arrow on the path meet either head-to-tail or tail-to-tail at the node, and the node is in C 
 					\item The arrow meet head-to-head at the node, and neither the node nor any of its descendants is in the set C
@@ -59,11 +59,11 @@ Based on the Probabilistic Inference Course of Marc Deisenroth (Imperial College
 				Then Joint distributions are the product of cliques in the graphs, and the full joint (of all variables) is the product of the joint of the maximum cliques
 
 				\[
-					p(x) = fra{1}{Z} \Pi _C \psi _C(x_C)
+					p(x) = \frac{1}{Z} \Pi_C \psi _C(x_C)
 				\]
 				Where C describe a maximal clique, $x_C$ all the variable in C, $\psi_C$ the clique potential and Z a normalisation constant. 
 
-				Check for the condiational independance : Check if when remmoving the observable variable there is no path between two set of random variable.
+				Check for the conditional independance : Check if when removing the observable variable there is no path between two sets of random variable.
 
 				The potentials can be seen as Energy Functions, which mean we can write $\psi_C(x_C) = exp(-E(x_C))$ with E some energy functions, and then $-log(p(x)) = \sum_C E(x_C)$ is the sum of energies of the clique potential.
 
@@ -76,7 +76,51 @@ Based on the Probabilistic Inference Course of Marc Deisenroth (Imperial College
 
 				Factor graphs make this decomposition explicit by introducing additional nodes for the factors themselves
 
+				\todo{Add def of factor graph}
 
+			\paragraph*{Converting graphs}
+
+
+				Directed graph  $\rightarrow$ MRF
+				\begin{itemize}
+					\item Moralization
+					\item Identiify cliques
+					\item Initialize cliques potential to 1
+					\item Take each conditionnal distribution factor in the directed graph, and multiply it into one of the clique potentials.
+				\end{itemize}
+
+				MRF $\leftarrow$ Factor Graph
+				\begin{itemize}
+					\item Take variables nodes from MRF
+					\item Create factor nodes corresponding to the Maximal cliques
+					\item the factor are set to be equal to corresponding clique potentials
+					\item Add appropriate link (multiple Factor graphs may correspond to the same MRF)
+				\end{itemize}
+
+			\paragraph*{Removing cycle}
+				Conversion make possible to remove cycle in bayesian network.
+
+			\paragraph*{Lambda message propagation in bayesian network}
+				see \url{https://emtiyaz.github.io/pcml15/belief_propagation.pdf}
+
+			\paragraph*{Sum-Product Algorithm for Factor Graphs}
+
+				On Factor graphs the inference task is finding the marginal posterior distributions. This can be done easily with Local Message Passing between nodes and factors. Repeated sending message until convergence give use the marginal posteriors. \\
+				There is two kind of message : 
+				\begin{itemize}
+					\item Variable to Factor Message $\mu_{x_m \rightarrow f_s}(x_m)=\prod_m \mu_{f_l \rightarrow x_m}(x_m)$\\
+					This is the product of all incomming message allong all other link. \\
+					A variable node can send message to a factor only when it has received message from all other link
+					\item Factor to variable message : $\sum_{x_1}...\sum_{x_M} f_s (x, x_1, ... , x_M) \prod_m \mu_{x_m \rightarrow f_s}(x_m)$\\
+					Take the product of incomming message\\
+					Multiply by the factor\\
+					Marginalize over all variable of the incomming messages.
+				\end{itemize}
+				Initialisation : 
+				\begin{itemize}
+					\item If leaf is Variable node then $\mu_{x \rightarrow f}(x) = 1$
+					\item If leaf is Factor node then $\mu_{f \rightarrow x}(x)= f(x)$
+				\end{itemize}
 \section{Linear Regression}
 
 	The Linear regression problem correspond to find a linear mapping $f(x)$ based on noisy observation $y = f(x) + \epsilon$, where $\epsilon$ is a noise. 
