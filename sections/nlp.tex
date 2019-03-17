@@ -309,49 +309,153 @@
 	\section{Language Model}
 
 		Language model task = LM's tasks.
-		Language models that assign a probability to each possible next word given a history of words. This can be generalised for entire sentences or operate at character level (or any symbol)
+		Language models are models that assign probabilities to each possible next word given a history of words. This can be generalised for entire sentences or operate at character level (or any symbol).
+
+		Why are Language Models useful ? 
+		\begin{itemize}
+			\item Speech/Handwritten recognition
+			\item Spelling correction
+			\item Machine Translation
+			\item Augmentative Communication
+			\item and even more
+		\end{itemize}
+
+		In all this task, probability of the next words (or entities) can drastically remove the space of search. 
+
+		\emph{Warning} In the following, n-gram can design either a sequence of n-words or the Language model based on n-gram.
+
 		\subsection{Basic N-gram language models}
 
 				A N-grams in simply a sequence of $n$ words, the LM's task here is to evaluate $P(w|h)$ where $w$ is next word and $h$ the history. P can then be estimated from frequency counts, but require large corpus.\\
 				Longer history or even for full sentences require very large corpus, and is not feasible for long sentences.\\
-				However, we can decompose the n-gram as n different word. This is translate in term of probablility by $P(h) = P(w_1 ... w_n) = P(w_1)P(w_2 | w_1)...P(w_n | w_1 ... w_{n-1})$ using a conditional chain rule. This help us to see this as Markov Chain, and making Markov Assumption : \\
+				However, we can decompose the n-gram as n different word. This is translate in term of probablility by $P(h) = P(w_1 ... w_n) = P(w_1)P(w_2 | w_1)...P(w_n | w_1 ... w_{n-1})$ using a conditional chain rule. This help us to see this as Markov Chain, and making Markov Assumption : 
 				\[
 					P(w_n | w_1^{n-1}) \simeq P(w_n | w_{n-N+1}^{n-1})
 				\]
-				where $w_1^{n-1} = w_1 ... w_{n-1}$. This mean that for a n-gram, the next word probability depend only the last $N$ few words (or are approximate so).
+				where $w_1^{n-1} = w_1 ... w_{n-1}$. This mean that for a n-gram, the next word probability depend only the last $N$ few words (or are approximate so). This approximation is the core of n-grams. 
+				Bigram use only the last word to estimate the next, trigram the two lasts, and n-gram n-1 words.
 
-				\begin{itemize}
-					\item MLE as relative frequencies
-					\item Corpus Size
-					\item Technicalities
-					\item Use log space
-					\item How to decide on n (of the n-gram)
-					\item Google exemple ressource
-				\end{itemize}
+				The kind of linguistic captured by bigram can be strictly syntactic, but also can be various kind of things, like cultural association, gender, etc. 
+
+				\paragraph*{MLE as relative frequencies : } The estimation of the n-gram probabilities can be done using MLE and the \emph{Relative frequency} which is the ratio between observed frequence and the observed frequency of a prefix.
+					\[
+						P(w_n | w^{n-1}_{n-N+1}) = \frac{C(w^{n-1}_{n-N+1}w_n)}{C(w^{n-1}_{n-N+1})}
+					\]
+				\paragraph*{Use log space :} For computing the probability multiplication, log space is much more stable.
+				\paragraph*{How to decide on n (of the n-gram) :} In practice bigram are never used, trigram are more common, but this can be larger with a consequent training dataset (larger n-gram require obviously larger dataset). More over it can be required context data (outside sentences data) for correct inference on the begining and ending of a sentence. The context data can be replaced with pseudo word as padding. 
+			
+
+				\todo{Google exemple ressource \url{https://ai.googleblog.com/2006/08/all-our-n-gram-are-belong-to-you.html}}
+		
 		\subsection{Evaluation of language models}
 
-				- Does it prefer real sentences to ungrammatical ones ?\\
-				- Measure the perplexity of an unseen corpus.\\
-				- Perplexity it the inverse probability of the test set. 
+			The best way to evaluate a model is to test how much it performs on a application regarding some baseline models. This is called \emph{extrinsic evaluation}. However running some complete systems can be expensive, so \emph{Intrinsic evaluation} can be done.
 
+			The question that can be ask is "Does it prefer real sentences to ungrammatical ones ?"\\
+			The measure the perplexity of an unseen corpus can give this answer\\
+			The \emph{Perplexity} is the inverse probability on the test set, normalized with the number of words.\\
+			for a word W : \todo{Add perplexity formulas}.\\
+			The lower the perplexity is, the better our model is on the test set.
+			The perplexity can be understand as the \emph{Weighted average branching factor} of a language, i.e the number of possible next words that can follow any word. 
 		\subsection{Sparsity}
+
+			N-gram rely on dataset, which have some various problems.
+			\begin{itemize}
+				\item Bias : Specific vocabulary, old corpus, etc
+				\item Missing sequences, leading to 0 probabilities.
+				\item Unable to contains new words
+			\end{itemize}
+			This lead to sparsity (lot of 0 probabilities) in the Probabilities given by the n-grams. This means that for a lot of sequences, there is not a lot of different possibility for the next words. A generative n-gram will often then directly copy the corpus sentences, This can be seen as a kind of "overfitting" in this tasks. Furthermore, if the corpus is not adapted to the tasks then there is fewer chance to get good results.\\
+			Moreover, if any sequence in a test set has a 0 probabilities then the full perplexity of the set is untractable.\\
+			Some techniques exists 
+
+			\paragraph*{Unknown words :} Open vocabulary, Out of vocabulary (OOV), OOV rate. <UNK> pseudo word can be added, using vocabulary restriction, or frequency.
+			\paragraph*{Smoothing}
+			What can be done for known word which appear in an unknown context ? Smoothing (discounting) to avoid 0 probabilities.
+			\begin{itemize}
+				\item Add-1, juste Add 1 to the count for each sequence. This is named the \emph{Laplace Smoothing}. It does not perform well, but useful as baseline.
+				\item Add-K, optimizing k on a devset. Usefull for classification, but not for language modeling.
+			\end{itemize}
+			
+			\paragraph*{Back-off}
+				Simply, when n-gram as probabilties 0, try with lesser n until finding none 0 proba. The proba can still be discounted when n is going lower. Using for exemple the Katz Backoff for discounting. Often the Katz is used with a Good-Turing Smoothing.
+
+			\paragraph*{Interpolation}
+				Same idea as Back-Off, but mix the probabilities of different size of n-gram with different weight, instead of only the largest one.
+
+			All these methods may have hyperparameters, such as the weighing of discounting. Those can be optimized with a dedicated separate dataset, named \emph{held-out} corpus.
 
 	\section{Structured prediction}
 
+		All the models that have been seen before forget about some very important points of the language : his inherent structure. Of course they don't need it theory, but models are always difficult to train, and using the language structure can only be benefitial. The formalism of this structure is called \emph{Part-Of-Speach}
+
 		\subsection{Part-Of-Speech tagging (POS)}
 
-				\paragraph*{Why do we need POS tagging}
+			POS tagging is the assignement to each word of a sentence of a classes/syntactic categories. This is really useful because POS reveal a lot about the role of a word and his neighbours. POS make possible to extract the subject of an action, which information is the main and which one is only background, etc. POS is really important in information extraction. But text never come with POS labels, which explain the need for tagging algorithms. 
 
-				\paragraph*{tagset}
+			\paragraph*{Tagset : } 
+				The tagset is the different syntactic categories that we want to use for a task, 	there is no unicity as it might depend of the task, the language, and it can be extend to any language, even theoritical language, if they have the good properties. However, in NLP task, as most research is about english, the following tags are the most common : Adjective, adverb, interjection, noun, proper noun, verb, punctuation, symbol (like math symbol), adposition, auxiliary verb, coordination conjonction, determinant, numeral, particule, pronoun, subordination conjonction and other. Actually this is a little more complicated than this, for exemple have a look to the Penn Treebank Part-Of-Speech tagset with 45 categories for English.
 
-				\paragraph*{baseline method}
+			\paragraph*{Baseline method :}
+				Of course it is impossible to set for each word in a dictionnary a unique tag but the baseline method is simply to assign to each words its most frequent POS tag according to a dataset and to set all unknown word to NOUN. The results with the baseline is quite impressive, arround 90\% for any test set which are similar to the training set.
+
+			\paragraph*{POS ambiguities}
+				However the exeptions are the devil in this case. Indeed, the ambiguities are the most difficult to get, and the ones whith the highest probabilities to deeply change the meaning of a sentences...\\
+				POS is really a disambiguation task. And if ambiguous word (wrt POS) are 15\% of the vocabulary, they represent more than half of the words use in text. 
 
 
-				\paragraph*{POS ambiguities}
+
 		\subsection{Probabilistic POS tagging}
+
+			The concept of probabilistic POS tagging is the following : given $W = w_1,w_2,...,w_n,$ we want to compute $P(T|W)$ with $T = t_1, t_2, ..., t_n$ a sequence of POS tags.\\
+			Therefore, A generative approach can be made, with
+			 \[P(T | W) \simeq P(W|T) P(T)\] 
+			 and $P(T)$ can be decompose with the chain rule and simplify with markov assumption (The tag $t_i$ depends only on a few previous tags) 
+			\[P(T) \simeq P(t_1)P(t_2 | t_1)...P(t_n | t_{n-1})\] 
+			and $P(W |T)$ can be compute assuming that each word depend only on his tag (and not on any other words/tags) : 
+			\[P(W|T) \simeq P(w_1 |t_1)P(w_2 |t_2)...P(w_n |t_n)\]
+			and finally $P(t_i | t_{i-1}) = \frac{C(t_{i-1}, t_i)}{C(t_{i-1})}$ and $P(w_i | t_{i} )= \frac{C(w_{i}, t_i)}{C(t_{i})}$\\
+			Then we can tag new sentences, going left to right, using at each step the highest $P(T | W)$ for tagging the next word. At each step it require to compute only $P(t_i | t_{i-1})P(w_i |t_i)$.\\
+			However, using the max probabilities greedily make the algoritms to ignore potentially goods paths. These approach can't guarranty that we find $\hat{T} = \arg\max_T P(T |W)$.
 
 		\subsection{Hidden Markov Model (HMM) tagger}
 
+			HMM are sequence model (or classifier), which mean there are model which give an output for each element of the input sequence. 
+
+			\todo[inline]{Add reference to a good definition and explanations of hidden markov model}
+
+			In the POS Tagging task, the observable event are the words of the sentence, and the hidden event are the TAG for each words. The HMM has 2 probability matrices, one for the likelihood $P(t_i | t_{i-1})$ the transition probability and one for the likelihood $P(w_i | t_{i} )$ the emission probability. \todo{Add graph of HMM example}.\\
+			The transition Matrices are estimate with the equation as before. 
+
+			\paragraph*{Tagging as decoding : }
+			Here is the important part, now that the HMM is set up with the same information (probabilities) of the simple probabilistic tagging the difference is the Tagging. Using a HMM, the tagging is actually the decoding task and with the Viterbi Algorithm it is possible to find the best sequence.
+
+			\begin{algorithm}[H]
+				\KwData{Sequence of word and HNN state graph}
+				\KwResult{Best-path (i.e best sequence) and the according probability}
+				N = len(state graph)\\
+				T = len(Sequence)\\
+				Create a path probability matrix viterbi[N, T]				
+					\ForAll{sate s}
+					{
+						viterbi[s, 1] $\leftarrow \pi_s * b_s(o_1) =  \pi_s * B_{s, 1}$ = Initial probability distribution times Emission probability.\\
+						backpointer[s, 1] $ \leftarrow 0$  
+					}
+					\ForAll{t in T}
+					{
+						\ForAll{state s}
+						{
+							viterbi[s, t] $\leftarrow \arg \max_{s'}$ viterbi[s', t-1] $* A_{s', s} * B_{s, t}$\\
+							backpointer[s, t] $\leftarrow \max_{s'}$ viterbi[s', t-1] $* A_{s', s} * B_{s, t}$
+						}
+					}
+				bestpathprob = $\max_s viterbi[s, T]$\\
+				bestpathpointer = $\arg\max_s viterbi[s, T]$\\
+				bestpath = path starting at best pointer\\
+				return bestpath, bestpathprobb\\
+				
+				\caption{Viterbi Algorithm for finding optimal sequence of Tag}
+			\end{algorithm}
 		\subsection{Maximum Entropy Markov Model (MEMM) for POS tagging}
 
 		\subsection{Other approachs}
