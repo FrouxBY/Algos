@@ -1,0 +1,114 @@
+%!TEX root = ../master.tex
+\chapter{Sampling} % (fold)
+\label{cha:sampling}
+
+Based on M. Deisenroth course Probabilistic Inference of imperial College
+
+	\section*{Motivation}
+
+		In inference and more generally in probability, there is two main problem : 
+		\begin{itemize}
+			\item \emph{Generate samples} from a given probability distribution, for simulation, representation of distributions, etc.
+			\item \emph{Compute Expectations} of functions under distribution, for evaluating means, variancess, marginal likelihood, predictions in Bayesian models, etc.
+		\end{itemize}
+
+		The second problem imply most of times to solve/evaluate integrals, and in real life there are not often analytically computable.
+
+ 	\section{Sample from distribution}
+
+ 		\subsection{Sampling Discrete Values}
+
+ 			An easy way is to sample from the uniform distribtion and to define for each discrete value an interval in [0, 1] corresponding to its probability.
+
+ 		\subsection{Sampling from Continous Variables}
+
+ 			Sampling from continuous distribution is more complicated. 
+ 			Sampling from uniform distribution is something that is easily done with random generator, and it is also possible to sample from specific distribution like Gaussian but not for any distributions.\\
+ 			However, here is an intuition : \\
+ 			- Visualize the area under the curve of the distribution,
+ 			- Sample uniformly from this area.
+
+ 			\paragraph*{Rejection Sampling}
+ 			One of the key idea is if sampling from $p(z)$ is difficult, evaluating $Z p(z)$ (even with unknown Z constant) is easy. Therefore it is possible to sample from an area which embrace the $Zp(z)$ curve, and then reject sample which are not under the curve. \\
+ 			Moreover, it is possible to find a better embracing area than a square, with a Gaussian or Laplace for example.
+ 			\begin{itemize}
+ 				\item Find a simpler distribution q(z) that we know how to sample from (Gaussian, Laplace, etc.)
+ 				\item Find an upper bound $kq(z) \geq \tilde{p}(z) = Z p(z)$
+ 				\item Then generate samples $z_i \sim q(z)$
+ 				\item Generate $u_i \sim \mathcal{U}[O, kq(z_i)]$
+ 				\item if $u_i > \tilde{p}(z_i)$, reject the sample, otherwise keep it
+ 				\item Then, the paire $(z, u)$ are uniformly distributed under the curve of $\tilde{p}(z)$
+ 			\end{itemize}
+
+ 			\paragraph*{Acceptance Rate}
+
+ 				This is the ratio between the numbers of accepted and rejected  samples. highly depends on k and k is tricky to optimize
+
+ 			\paragraph*{Problem with high dimension}
+
+ 				k is probably huge, therefore low acceptance rate, which mean not efficient sampling.
+
+ 			\paragraph*{Importance Sampling}
+ 				Key Idea : Do not throw away all rejected samples.
+
+
+	\section{Different method of Approximate Integration}
+
+		\subsection{Numerical integration}
+			Faisible for low-dimensionnal problems.
+		\subsection{Bayesian quadrature}
+
+		\subsection{Variational Bayes}
+
+		\subsection{Expectation Propagation}
+
+	\section{Monte-Carlo Methods}
+
+		\subsection{Monte Carlo Estimation}
+
+			\paragraph*{Computing Expectation}
+
+				\[
+					E[f(x)] = \int f(x) p(x) dx \simeq \frac{1}{S} \sum_s^S f(x^s) \text{ with } x^s \sim p(x)
+				\]
+				This Estimator is assymptotically consistent, the error is gaussian with a variance in 1/S independant of the dimension, and this Estimator is unbiased.				
+
+			\paragraph*{Making Prediction}
+
+			\emph{Problem}: Require to generate Sample. See Sampling Section
+
+		\subsection{Markov Chains MonteCarlo (MCMC)}
+
+			The idea is to generate sample as a sequence, i.e. sample are not independant, and use a proposal density that depends on the previous sample.\\
+			This is a Markov property, therefore Markov Chain seems to be usefull for this problem. 
+
+			\paragraph*{Behaviour of Markov Chains}
+				Markov Chain can have 4 different behaviour, depending of the state and transition probability, etc.
+				\begin{itemize}
+					\item Diverge
+					\item Converge to an absorbing state
+					\item Converge to a deterministic cycle
+					\item Converge to an equilibrium distribution, i.e the MC remains in a region, going arround in a random way.
+				\end{itemize}
+				Of course the behaviour we are interesting in is the fourth. The goal will be to define a Markov Chain with an equilibrium distribution equals to the distribution we want to sample for.\\
+				Even if the sample are not independant, it can be approximated if there are enough space between to choosen sample.
+
+			\paragraph*{Conditions for Converging to an Equilibrium Distribution}
+				\begin{itemize}
+					\item Invariance/stationnarity :If you are in $p^*$ then the next step will stay in $p^*$.\\
+					It is suffisant to have the following property : \emph{Detailed balance} $p^*(x)T(x'|x) = p^*(x') T(x |x')$ with $T$ the transition Matrix.\\
+					This also ensure that the MC is reversible
+					\item Ergodicity : any state are reachable from any state, which lead to consistency of the equilibrium independantly of the starting state.
+				\end{itemize}
+
+			\paragraph*{Correelated Samples}
+
+		\subsection{Metropolis-Hastings}
+
+		\subsection{Gibbs Sampling}
+
+		\subsection{Slice}
+
+
+
+% chapter sampling (end)
